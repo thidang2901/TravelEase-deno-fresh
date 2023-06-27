@@ -5,5 +5,6 @@ export default {
   },
   database: {
     uri: Deno.env.get("DATABASE_URL"),
+    proxy_uri: Deno.env.get("PROXY_DATABASE_URL"),
   },
 };
