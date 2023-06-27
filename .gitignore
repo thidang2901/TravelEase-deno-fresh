@@ -4,3 +4,9 @@
 .env.test.local
 .env.production.local
 .env.local
+
+# dependencies
+node_modules/
+
+# prisma
+prisma/client

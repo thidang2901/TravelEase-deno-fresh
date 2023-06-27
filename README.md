@@ -1,9 +1,25 @@
-# Fresh project
+# TravelEase
 
-Your new Fresh project is ready to go. You can follow the Fresh "Getting
-Started" guide here: https://fresh.deno.dev/docs/getting-started
+_This is portfolio project using [Fresh Deno](https://fresh.deno.dev) - The
+next-gen web framework._
 
-### Usage
+- [TravelEase](#travelease)
+  - [Technical Stacks](#technical-stacks)
+  - [QuickStart](#quickstart)
+  - [Development](#development)
+
+## Technical Stacks
+
+| <!-- -->   | <!-- -->                                        |
+| ---------- | ----------------------------------------------- |
+| Language   | TypeScript                                      |
+| Runtime    | [Deno](https://deno.com/runtime)                |
+| Framework  | [Fresh Deno](https://fresh.deno.dev)            |
+| Database   | PostgreSQL on [Supabase](https://supabase.com/) |
+| ORM        | [Prisma.io](https://www.prisma.io/)             |
+| Deployment | [Deno Deploy](https://deno.com/deploy)          |
+
+## QuickStart
 
 Make sure to install Deno: https://deno.land/manual/getting_started/installation
 
@@ -14,3 +30,7 @@ deno task start
 ```
 
 This will watch the project directory and restart as necessary.
+
+## Development
+
+TBU

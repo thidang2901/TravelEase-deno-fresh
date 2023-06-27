@@ -12,4 +12,12 @@ import manifest from "./fresh.gen.ts";
 import twindPlugin from "$fresh/plugins/twind.ts";
 import twindConfig from "./twind.config.ts";
 
-await start(manifest, { plugins: [twindPlugin(twindConfig)] });
+import configuration from "./config/configuration.ts";
+import logger from "./config/logger.ts";
+
+logger.info("Sever is running...");
+
+await start(manifest, {
+  plugins: [twindPlugin(twindConfig)],
+  port: configuration.app.port,
+});
