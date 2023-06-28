@@ -9,8 +9,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Location {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String?
+model Country {
+  id           Int           @id @default(autoincrement())
+  code         String        @unique
+  name         String
+  Destinations Destination[]
+}
+
+model Destination {
+  id          Int                @id @default(autoincrement())
+  name        String             @unique
+  region      String
+  countryId   Int
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  attractions Attraction[]
+  country     Country            @relation(fields: [countryId], references: [id])
+  images      DestinationImage[]
+
+  @@index([name])
+}
+
+model Attraction {
+  id            Int               @id @default(autoincrement())
+  name          String            @unique
+  destinationId Int
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  destination   Destination       @relation(fields: [destinationId], references: [id])
+  images        AttractionImage[]
+
+  @@index([name])
+}
+
+model DestinationImage {
+  id            String      @id @default(uuid())
+  url           String
+  destinationId Int
+  destination   Destination @relation(fields: [destinationId], references: [id])
+}
+
+model AttractionImage {
+  id           String     @id @default(uuid())
+  url          String
+  attractionId Int
+  attraction   Attraction @relation(fields: [attractionId], references: [id])
 }
