@@ -4,18 +4,18 @@
 <br />
 <p align="center">
   <a href="https://github.com/thidang2901/TravelEase-deno-fresh">
-    <img src="https://raw.githubusercontent.com/thidang2901/TravelEase-deno-fresh/master/static/logo.svg" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/thidang2901/TravelEase-deno-fresh/master/static/logo.svg" alt="Logo" width="160" height="auto">
   </a>
   <h3 align="center">Travel Ease</h3>
   <p align="center">
-    An application for self-travel planning
+    A web application for self-travel planning
     <br />
-    <a href="thidang2901-travel-app.deno.dev/"><strong>View Demo</strong></a>
+    <a href="https://thidang2901-travel-app.deno.dev"><strong>View Demo</strong></a>
   </p>
 </p>
 
 <!-- TABLE OF CONTENTS -->
-<details open="open">
+<details>
   <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
@@ -48,28 +48,26 @@ next-gen web framework.
 | **ORM**        | [Prisma.io](https://www.prisma.io/)             |
 | **Deployment** | [Deno Deploy](https://deno.com/deploy)          |
 
-## Getting Started (TBU)
+## Development (TBU)
 
-### Prerequisites
+### Install Deno
 
-Make sure to install Deno: https://deno.land/manual/getting_started/installation
+- Deno (latest version): https://deno.land/manual/getting_started/installation
 
-Then start the project:
+Check Deno with `deno --version`:
 
 ```
-deno task start
+deno 1.34.3 (release, x86_64-unknown-linux-gnu)
+v8 11.5.150.2
+typescript 5.0.
 ```
 
-This will watch the project directory and restart as necessary.
+### Setup Prisma Client
 
-### Development
+- Deno with Prisma
+  [example](https://github.com/denoland/examples/tree/main/with-prisma)
 
-#### Fresh
-
-#### Prisma
-
-_Deno's with Prisma example:
-https://github.com/denoland/examples/tree/main/with-prisma_
+- Quick check on [issues](#issues) if it might help you.
 
 Clone the project
 
@@ -115,9 +113,31 @@ Create new seed as example Run `prisma/seed.ts`
 deno run -A prisma/seed.ts
 ```
 
+#### **Issues**
+
+If your `deno run -A --unstable npm:prisma` did not work well, it was unstable
+sometimes, hanging up forever,... like this:
+
+<img src="./data/images/deno-prisma-issue.png" width="auto" height="120" alt="deno-prisma-issue">
+
+To deal with it, use `npx prisma` instead without `deno`, for examples:
+
+```
+npx prisma generate --data-proxy
+npx prisma db pull
+npx prisma db push
+```
+
+Result:
+
+<img src="./data/images/deno-prisma-success.png" width="690" height="auto" alt="deno-prisma-success">
+
+<br/>
+
+<p align="center" style="font-size:20px">
+  HAPPY CODDING!
+</p>
+
 ## Contact
 
 Thi Dang (Ms.) - [LinkedIn](https://www.linkedin.com/in/thidang2901/)
-
-Project Link:
-[https://github.com/thidang2901/TravelEase-deno-fresh](https://github.com/thidang2901/TravelEase-deno-fresh)
