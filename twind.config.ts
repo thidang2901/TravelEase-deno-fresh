@@ -1,6 +1,7 @@
 import { Options } from "$fresh/plugins/twind.ts";
 import { autoDarkColor } from "@twind/core";
 import * as colors from "twind/colors";
+
 export default {
   theme: {
     extend: {
@@ -8,16 +9,14 @@ export default {
         sans: "Helvetica, sans-serif",
         "geologica": '"Geologica"',
       },
+      colors,
     },
-  },
-  colors: {
-    primaryColor: "#0074D9",
-    secondaryColor: "#9EDFFF",
-    accentColor: "#00BFFF",
-    neutralColor: "#F5F8FA",
-  },
-  extend: {
-    colors,
+    colors: {
+      primaryColor: "#0074D9",
+      secondaryColor: "#9EDFFF",
+      accentColor: "#00BFFF",
+      neutralColor: "#F5F8FA",
+    },
   },
   selfURL: import.meta.url,
   darkColor: autoDarkColor,
