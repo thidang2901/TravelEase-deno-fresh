@@ -1,27 +1,37 @@
 import { FaUser } from "react-icons/fa";
 
-import { routes } from "@/libs/constants/layouts.ts";
+import { menus } from "@/libs/constants/layouts.ts";
 
-export function Header() {
+type Props = {
+  active: string;
+};
+
+export function Header({ active }: Props) {
   return (
-    <header className="w-full">
-      <div className="flex items-center justify-between px-10 py-5">
+    <header className="flex justify-center w-full h-24">
+      <div className="flex items-center justify-between w-full px-10">
+        {/* Logo */}
         <a className="w-36" href="#">
           <img src="/logo.svg" />
         </a>
 
-        <div class="flex font-semibold gap-14 text-md">
-          {routes.map((item) => (
+        {/* Menu */}
+        <div class="flex gap-14 text-md">
+          {menus.map((menu) => (
             <a
-              id={item.id}
-              className="transition-all duration-300 text-accentColor hover:text-primaryColor"
-              href="#"
+              id={menu.id}
+              href={menu.href}
+              className={`transition-all duration-300 ease-in-out text-accentColor hover:text-primaryColor 
+              ${(menu.id === active
+                ? "border-b-2 border-accentColor hover:border-primaryColor"
+                : "")}`}
             >
-              {item.name}
+              {menu.name}
             </a>
           ))}
         </div>
 
+        {/* User */}
         <div className="cursor-pointer">
           <FaUser
             size={25}
