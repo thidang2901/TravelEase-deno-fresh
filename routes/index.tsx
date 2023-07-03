@@ -1,27 +1,43 @@
-// interface Data {
-//   products: List<Product>;
-// }
+import { Handlers, PageProps } from "$fresh/server.ts";
 
-// export const handler: Handlers<Data> = {
-//   async GET(_req, ctx) {
-//     const data = await prismaClient;
-//     return ctx.render(data);
-//   },
-// };
+import { HeadElement } from "@/components/HeadElement.tsx";
+import SearchInput from "@/islands/SearchInput.tsx";
+import { prismaClient } from "@/libs/database/prisma.ts";
+import { Destination } from "@/libs/schemas/destination.schema.ts";
 
-// export default function Home(ctx: PageProps<Data>) {
-export default function Home() {
-  // const { data, url } = ctx;
-  // const products = data.products.nodes;
+export const handler: Handlers<Destination[]> = {
+  async GET(_req, ctx) {
+    const data = await prismaClient.destination.findMany();
+    return ctx.render(data);
+  },
+};
+
+export default function Home(ctx: PageProps<Destination[]>) {
+  const { data: destinations, url } = ctx;
+
   return (
-    <div className="flex items-center justify-center flex-grow-1">
-      <div>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo quam
-        dicta cum, commodi odit eum quos. Illo, ipsum facilis praesentium
-        nesciunt a quis neque, voluptate non, adipisci quia consequuntur harum!
-      </div>
-      {
-        /* <div
+    <>
+      <HeadElement
+        description="Home"
+        title="Home | Travel Ease"
+      />
+
+      <SearchInput
+        id="home-search"
+        name="search"
+        placeholder="Go to your destination"
+        autoComplete="off"
+      />
+
+      <div className="flex flex-col items-center justify-center bg-gray-300 flex-grow-1">
+        <div>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo
+          quam dicta cum, commodi odit eum quos. Illo, ipsum facilis praesentium
+          nesciunt a quis neque, voluptate non, adipisci quia consequuntur
+          harum!
+        </div>
+        {
+          /* <div
         className="w-11/12 max-w-5xl mx-auto mt-28"
         aria-labelledby="information-heading"
       >
@@ -32,7 +48,8 @@ export default function Home() {
           {products.map((product) => <ProductCard product={product} />)}
         </div>
       </div> */
-      }
-    </div>
+        }
+      </div>
+    </>
   );
 }
