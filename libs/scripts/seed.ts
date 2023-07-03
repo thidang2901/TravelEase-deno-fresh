@@ -8,11 +8,8 @@ import "$std/dotenv/load.ts";
 
 import configuration from "@/config/configuration.ts";
 import { Prisma, PrismaClient } from "@/prisma/client/deno/edge.ts";
-import locationSeeds from "@/prisma/seed-data/location.json" assert {
-  type: "json",
-};
 
-console.log({ configuration });
+import countriesData from "@/data/seeds/countries.ts"
 
 const prismaClient = new PrismaClient({
   datasources: {
@@ -25,10 +22,9 @@ const prismaClient = new PrismaClient({
 async function generateSeeds() {
   const seeds = [{
     "type": "location",
-    "data": locationSeeds as Prisma.LocationCreateInput[],
-    "model": prismaClient.location,
+    "data": countriesData as Prisma.DestinationCreateInput[],
+    "model": prismaClient.destination,
   }];
-  // const locationData: Prisma.LocationCreateInput[] = locationSeeds;
 
   for (const seed of seeds) {
     for (const data of seed.data) {

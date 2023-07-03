@@ -12,21 +12,99 @@ import $Extensions = runtime.Types.Extensions
 export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
-export type LocationPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-  objects: {}
+export type CountryPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  objects: {
+    destinations: DestinationPayload<ExtArgs>[]
+  }
   scalars: $Extensions.GetResult<{
     id: number
+    code: string
     name: string
-    description: string | null
-  }, ExtArgs["result"]["location"]>
+  }, ExtArgs["result"]["country"]>
   composites: {}
 }
 
 /**
- * Model Location
+ * Model Country
  * 
  */
-export type Location = runtime.Types.DefaultSelection<LocationPayload>
+export type Country = runtime.Types.DefaultSelection<CountryPayload>
+export type DestinationPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  objects: {
+    attractions: AttractionPayload<ExtArgs>[]
+    country: CountryPayload<ExtArgs>
+    images: DestinationImagePayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: number
+    name: string
+    region: string
+    countryId: number
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["destination"]>
+  composites: {}
+}
+
+/**
+ * Model Destination
+ * 
+ */
+export type Destination = runtime.Types.DefaultSelection<DestinationPayload>
+export type AttractionPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  objects: {
+    destination: DestinationPayload<ExtArgs>
+    images: AttractionImagePayload<ExtArgs>[]
+  }
+  scalars: $Extensions.GetResult<{
+    id: number
+    name: string
+    destinationId: number
+    createdAt: Date
+    updatedAt: Date
+  }, ExtArgs["result"]["attraction"]>
+  composites: {}
+}
+
+/**
+ * Model Attraction
+ * 
+ */
+export type Attraction = runtime.Types.DefaultSelection<AttractionPayload>
+export type DestinationImagePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  objects: {
+    destination: DestinationPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    url: string
+    destinationId: number
+  }, ExtArgs["result"]["destinationImage"]>
+  composites: {}
+}
+
+/**
+ * Model DestinationImage
+ * 
+ */
+export type DestinationImage = runtime.Types.DefaultSelection<DestinationImagePayload>
+export type AttractionImagePayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  objects: {
+    attraction: AttractionPayload<ExtArgs>
+  }
+  scalars: $Extensions.GetResult<{
+    id: string
+    url: string
+    attractionId: number
+  }, ExtArgs["result"]["attractionImage"]>
+  composites: {}
+}
+
+/**
+ * Model AttractionImage
+ * 
+ */
+export type AttractionImage = runtime.Types.DefaultSelection<AttractionImagePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -35,8 +113,8 @@ export type Location = runtime.Types.DefaultSelection<LocationPayload>
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Locations
- * const locations = await prisma.location.findMany()
+ * // Fetch zero or more Countries
+ * const countries = await prisma.country.findMany()
  * ```
  *
  * 
@@ -59,8 +137,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Locations
-   * const locations = await prisma.location.findMany()
+   * // Fetch zero or more Countries
+   * const countries = await prisma.country.findMany()
    * ```
    *
    * 
@@ -154,14 +232,54 @@ export class PrismaClient<
   $extends: $Extensions.ExtendsHook<'extends', Prisma.TypeMapCb, ExtArgs>
 
       /**
-   * `prisma.location`: Exposes CRUD operations for the **Location** model.
+   * `prisma.country`: Exposes CRUD operations for the **Country** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Locations
-    * const locations = await prisma.location.findMany()
+    * // Fetch zero or more Countries
+    * const countries = await prisma.country.findMany()
     * ```
     */
-  get location(): Prisma.LocationDelegate<GlobalReject, ExtArgs>;
+  get country(): Prisma.CountryDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.destination`: Exposes CRUD operations for the **Destination** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Destinations
+    * const destinations = await prisma.destination.findMany()
+    * ```
+    */
+  get destination(): Prisma.DestinationDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.attraction`: Exposes CRUD operations for the **Attraction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Attractions
+    * const attractions = await prisma.attraction.findMany()
+    * ```
+    */
+  get attraction(): Prisma.AttractionDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.destinationImage`: Exposes CRUD operations for the **DestinationImage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DestinationImages
+    * const destinationImages = await prisma.destinationImage.findMany()
+    * ```
+    */
+  get destinationImage(): Prisma.DestinationImageDelegate<GlobalReject, ExtArgs>;
+
+  /**
+   * `prisma.attractionImage`: Exposes CRUD operations for the **AttractionImage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AttractionImages
+    * const attractionImages = await prisma.attractionImage.findMany()
+    * ```
+    */
+  get attractionImage(): Prisma.AttractionImageDelegate<GlobalReject, ExtArgs>;
 }
 
 export namespace Prisma {
@@ -645,7 +763,11 @@ export namespace Prisma {
 
 
   export const ModelName: {
-    Location: 'Location'
+    Country: 'Country',
+    Destination: 'Destination',
+    Attraction: 'Attraction',
+    DestinationImage: 'DestinationImage',
+    AttractionImage: 'AttractionImage'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -662,86 +784,402 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'location'
+      modelProps: 'country' | 'destination' | 'attraction' | 'destinationImage' | 'attractionImage'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
-      Location: {
+      Country: {
         operations: {
           findUnique: {
-            args: Prisma.LocationFindUniqueArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload> | null
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload> | null
+            payload: CountryPayload<ExtArgs>
           }
           findUniqueOrThrow: {
-            args: Prisma.LocationFindUniqueOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload>
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload>
+            payload: CountryPayload<ExtArgs>
           }
           findFirst: {
-            args: Prisma.LocationFindFirstArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload> | null
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload> | null
+            payload: CountryPayload<ExtArgs>
           }
           findFirstOrThrow: {
-            args: Prisma.LocationFindFirstOrThrowArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload>
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload>
+            payload: CountryPayload<ExtArgs>
           }
           findMany: {
-            args: Prisma.LocationFindManyArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload>[]
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload>[]
+            payload: CountryPayload<ExtArgs>
           }
           create: {
-            args: Prisma.LocationCreateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload>
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload>
+            payload: CountryPayload<ExtArgs>
           }
           createMany: {
-            args: Prisma.LocationCreateManyArgs<ExtArgs>,
+            args: Prisma.CountryCreateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
-            payload: LocationPayload<ExtArgs>
+            payload: CountryPayload<ExtArgs>
           }
           delete: {
-            args: Prisma.LocationDeleteArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload>
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload>
+            payload: CountryPayload<ExtArgs>
           }
           update: {
-            args: Prisma.LocationUpdateArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload>
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload>
+            payload: CountryPayload<ExtArgs>
           }
           deleteMany: {
-            args: Prisma.LocationDeleteManyArgs<ExtArgs>,
+            args: Prisma.CountryDeleteManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
-            payload: LocationPayload<ExtArgs>
+            payload: CountryPayload<ExtArgs>
           }
           updateMany: {
-            args: Prisma.LocationUpdateManyArgs<ExtArgs>,
+            args: Prisma.CountryUpdateManyArgs<ExtArgs>,
             result: Prisma.BatchPayload
-            payload: LocationPayload<ExtArgs>
+            payload: CountryPayload<ExtArgs>
           }
           upsert: {
-            args: Prisma.LocationUpsertArgs<ExtArgs>,
-            result: $Utils.PayloadToResult<LocationPayload>
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<CountryPayload>
+            payload: CountryPayload<ExtArgs>
           }
           aggregate: {
-            args: Prisma.LocationAggregateArgs<ExtArgs>,
-            result: $Utils.Optional<AggregateLocation>
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateCountry>
+            payload: CountryPayload<ExtArgs>
           }
           groupBy: {
-            args: Prisma.LocationGroupByArgs<ExtArgs>,
-            result: $Utils.Optional<LocationGroupByOutputType>[]
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<CountryGroupByOutputType>[]
+            payload: CountryPayload<ExtArgs>
           }
           count: {
-            args: Prisma.LocationCountArgs<ExtArgs>,
-            result: $Utils.Optional<LocationCountAggregateOutputType> | number
-            payload: LocationPayload<ExtArgs>
+            args: Prisma.CountryCountArgs<ExtArgs>,
+            result: $Utils.Optional<CountryCountAggregateOutputType> | number
+            payload: CountryPayload<ExtArgs>
+          }
+        }
+      }
+      Destination: {
+        operations: {
+          findUnique: {
+            args: Prisma.DestinationFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload> | null
+            payload: DestinationPayload<ExtArgs>
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DestinationFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload>
+            payload: DestinationPayload<ExtArgs>
+          }
+          findFirst: {
+            args: Prisma.DestinationFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload> | null
+            payload: DestinationPayload<ExtArgs>
+          }
+          findFirstOrThrow: {
+            args: Prisma.DestinationFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload>
+            payload: DestinationPayload<ExtArgs>
+          }
+          findMany: {
+            args: Prisma.DestinationFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload>[]
+            payload: DestinationPayload<ExtArgs>
+          }
+          create: {
+            args: Prisma.DestinationCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload>
+            payload: DestinationPayload<ExtArgs>
+          }
+          createMany: {
+            args: Prisma.DestinationCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: DestinationPayload<ExtArgs>
+          }
+          delete: {
+            args: Prisma.DestinationDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload>
+            payload: DestinationPayload<ExtArgs>
+          }
+          update: {
+            args: Prisma.DestinationUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload>
+            payload: DestinationPayload<ExtArgs>
+          }
+          deleteMany: {
+            args: Prisma.DestinationDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: DestinationPayload<ExtArgs>
+          }
+          updateMany: {
+            args: Prisma.DestinationUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: DestinationPayload<ExtArgs>
+          }
+          upsert: {
+            args: Prisma.DestinationUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationPayload>
+            payload: DestinationPayload<ExtArgs>
+          }
+          aggregate: {
+            args: Prisma.DestinationAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateDestination>
+            payload: DestinationPayload<ExtArgs>
+          }
+          groupBy: {
+            args: Prisma.DestinationGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<DestinationGroupByOutputType>[]
+            payload: DestinationPayload<ExtArgs>
+          }
+          count: {
+            args: Prisma.DestinationCountArgs<ExtArgs>,
+            result: $Utils.Optional<DestinationCountAggregateOutputType> | number
+            payload: DestinationPayload<ExtArgs>
+          }
+        }
+      }
+      Attraction: {
+        operations: {
+          findUnique: {
+            args: Prisma.AttractionFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload> | null
+            payload: AttractionPayload<ExtArgs>
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttractionFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload>
+            payload: AttractionPayload<ExtArgs>
+          }
+          findFirst: {
+            args: Prisma.AttractionFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload> | null
+            payload: AttractionPayload<ExtArgs>
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttractionFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload>
+            payload: AttractionPayload<ExtArgs>
+          }
+          findMany: {
+            args: Prisma.AttractionFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload>[]
+            payload: AttractionPayload<ExtArgs>
+          }
+          create: {
+            args: Prisma.AttractionCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload>
+            payload: AttractionPayload<ExtArgs>
+          }
+          createMany: {
+            args: Prisma.AttractionCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: AttractionPayload<ExtArgs>
+          }
+          delete: {
+            args: Prisma.AttractionDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload>
+            payload: AttractionPayload<ExtArgs>
+          }
+          update: {
+            args: Prisma.AttractionUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload>
+            payload: AttractionPayload<ExtArgs>
+          }
+          deleteMany: {
+            args: Prisma.AttractionDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: AttractionPayload<ExtArgs>
+          }
+          updateMany: {
+            args: Prisma.AttractionUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: AttractionPayload<ExtArgs>
+          }
+          upsert: {
+            args: Prisma.AttractionUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionPayload>
+            payload: AttractionPayload<ExtArgs>
+          }
+          aggregate: {
+            args: Prisma.AttractionAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateAttraction>
+            payload: AttractionPayload<ExtArgs>
+          }
+          groupBy: {
+            args: Prisma.AttractionGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<AttractionGroupByOutputType>[]
+            payload: AttractionPayload<ExtArgs>
+          }
+          count: {
+            args: Prisma.AttractionCountArgs<ExtArgs>,
+            result: $Utils.Optional<AttractionCountAggregateOutputType> | number
+            payload: AttractionPayload<ExtArgs>
+          }
+        }
+      }
+      DestinationImage: {
+        operations: {
+          findUnique: {
+            args: Prisma.DestinationImageFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload> | null
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DestinationImageFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload>
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          findFirst: {
+            args: Prisma.DestinationImageFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload> | null
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          findFirstOrThrow: {
+            args: Prisma.DestinationImageFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload>
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          findMany: {
+            args: Prisma.DestinationImageFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload>[]
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          create: {
+            args: Prisma.DestinationImageCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload>
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          createMany: {
+            args: Prisma.DestinationImageCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          delete: {
+            args: Prisma.DestinationImageDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload>
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          update: {
+            args: Prisma.DestinationImageUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload>
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          deleteMany: {
+            args: Prisma.DestinationImageDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          updateMany: {
+            args: Prisma.DestinationImageUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          upsert: {
+            args: Prisma.DestinationImageUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<DestinationImagePayload>
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          aggregate: {
+            args: Prisma.DestinationImageAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateDestinationImage>
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          groupBy: {
+            args: Prisma.DestinationImageGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<DestinationImageGroupByOutputType>[]
+            payload: DestinationImagePayload<ExtArgs>
+          }
+          count: {
+            args: Prisma.DestinationImageCountArgs<ExtArgs>,
+            result: $Utils.Optional<DestinationImageCountAggregateOutputType> | number
+            payload: DestinationImagePayload<ExtArgs>
+          }
+        }
+      }
+      AttractionImage: {
+        operations: {
+          findUnique: {
+            args: Prisma.AttractionImageFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload> | null
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttractionImageFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload>
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          findFirst: {
+            args: Prisma.AttractionImageFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload> | null
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttractionImageFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload>
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          findMany: {
+            args: Prisma.AttractionImageFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload>[]
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          create: {
+            args: Prisma.AttractionImageCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload>
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          createMany: {
+            args: Prisma.AttractionImageCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          delete: {
+            args: Prisma.AttractionImageDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload>
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          update: {
+            args: Prisma.AttractionImageUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload>
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          deleteMany: {
+            args: Prisma.AttractionImageDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          updateMany: {
+            args: Prisma.AttractionImageUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          upsert: {
+            args: Prisma.AttractionImageUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<AttractionImagePayload>
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          aggregate: {
+            args: Prisma.AttractionImageAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateAttractionImage>
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          groupBy: {
+            args: Prisma.AttractionImageGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<AttractionImageGroupByOutputType>[]
+            payload: AttractionImagePayload<ExtArgs>
+          }
+          count: {
+            args: Prisma.AttractionImageCountArgs<ExtArgs>,
+            result: $Utils.Optional<AttractionImageCountAggregateOutputType> | number
+            payload: AttractionImagePayload<ExtArgs>
           }
         }
       }
@@ -924,353 +1362,474 @@ export namespace Prisma {
    */
 
 
+  /**
+   * Count Type CountryCountOutputType
+   */
+
+
+  export type CountryCountOutputType = {
+    destinations: number
+  }
+
+  export type CountryCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    destinations?: boolean | CountryCountOutputTypeCountDestinationsArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * CountryCountOutputType without action
+   */
+  export type CountryCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CountryCountOutputType
+     */
+    select?: CountryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * CountryCountOutputType without action
+   */
+  export type CountryCountOutputTypeCountDestinationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: DestinationWhereInput
+  }
+
+
+
+  /**
+   * Count Type DestinationCountOutputType
+   */
+
+
+  export type DestinationCountOutputType = {
+    attractions: number
+    images: number
+  }
+
+  export type DestinationCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    attractions?: boolean | DestinationCountOutputTypeCountAttractionsArgs
+    images?: boolean | DestinationCountOutputTypeCountImagesArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * DestinationCountOutputType without action
+   */
+  export type DestinationCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationCountOutputType
+     */
+    select?: DestinationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * DestinationCountOutputType without action
+   */
+  export type DestinationCountOutputTypeCountAttractionsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: AttractionWhereInput
+  }
+
+
+  /**
+   * DestinationCountOutputType without action
+   */
+  export type DestinationCountOutputTypeCountImagesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: DestinationImageWhereInput
+  }
+
+
+
+  /**
+   * Count Type AttractionCountOutputType
+   */
+
+
+  export type AttractionCountOutputType = {
+    images: number
+  }
+
+  export type AttractionCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    images?: boolean | AttractionCountOutputTypeCountImagesArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * AttractionCountOutputType without action
+   */
+  export type AttractionCountOutputTypeArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionCountOutputType
+     */
+    select?: AttractionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * AttractionCountOutputType without action
+   */
+  export type AttractionCountOutputTypeCountImagesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: AttractionImageWhereInput
+  }
+
+
 
   /**
    * Models
    */
 
   /**
-   * Model Location
+   * Model Country
    */
 
 
-  export type AggregateLocation = {
-    _count: LocationCountAggregateOutputType | null
-    _avg: LocationAvgAggregateOutputType | null
-    _sum: LocationSumAggregateOutputType | null
-    _min: LocationMinAggregateOutputType | null
-    _max: LocationMaxAggregateOutputType | null
+  export type AggregateCountry = {
+    _count: CountryCountAggregateOutputType | null
+    _avg: CountryAvgAggregateOutputType | null
+    _sum: CountrySumAggregateOutputType | null
+    _min: CountryMinAggregateOutputType | null
+    _max: CountryMaxAggregateOutputType | null
   }
 
-  export type LocationAvgAggregateOutputType = {
+  export type CountryAvgAggregateOutputType = {
     id: number | null
   }
 
-  export type LocationSumAggregateOutputType = {
+  export type CountrySumAggregateOutputType = {
     id: number | null
   }
 
-  export type LocationMinAggregateOutputType = {
+  export type CountryMinAggregateOutputType = {
     id: number | null
+    code: string | null
     name: string | null
-    description: string | null
   }
 
-  export type LocationMaxAggregateOutputType = {
+  export type CountryMaxAggregateOutputType = {
     id: number | null
+    code: string | null
     name: string | null
-    description: string | null
   }
 
-  export type LocationCountAggregateOutputType = {
+  export type CountryCountAggregateOutputType = {
     id: number
+    code: number
     name: number
-    description: number
     _all: number
   }
 
 
-  export type LocationAvgAggregateInputType = {
+  export type CountryAvgAggregateInputType = {
     id?: true
   }
 
-  export type LocationSumAggregateInputType = {
+  export type CountrySumAggregateInputType = {
     id?: true
   }
 
-  export type LocationMinAggregateInputType = {
+  export type CountryMinAggregateInputType = {
     id?: true
+    code?: true
     name?: true
-    description?: true
   }
 
-  export type LocationMaxAggregateInputType = {
+  export type CountryMaxAggregateInputType = {
     id?: true
+    code?: true
     name?: true
-    description?: true
   }
 
-  export type LocationCountAggregateInputType = {
+  export type CountryCountAggregateInputType = {
     id?: true
+    code?: true
     name?: true
-    description?: true
     _all?: true
   }
 
-  export type LocationAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Location to aggregate.
+     * Filter which Country to aggregate.
      */
-    where?: LocationWhereInput
+    where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Locations to fetch.
+     * Determine the order of Countries to fetch.
      */
-    orderBy?: Enumerable<LocationOrderByWithRelationInput>
+    orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: LocationWhereUniqueInput
+    cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Locations from the position of the cursor.
+     * Take `±n` Countries from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Locations.
+     * Skip the first `n` Countries.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Locations
+     * Count returned Countries
     **/
-    _count?: true | LocationCountAggregateInputType
+    _count?: true | CountryCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: LocationAvgAggregateInputType
+    _avg?: CountryAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: LocationSumAggregateInputType
+    _sum?: CountrySumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: LocationMinAggregateInputType
+    _min?: CountryMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: LocationMaxAggregateInputType
+    _max?: CountryMaxAggregateInputType
   }
 
-  export type GetLocationAggregateType<T extends LocationAggregateArgs> = {
-        [P in keyof T & keyof AggregateLocation]: P extends '_count' | 'count'
+  export type GetCountryAggregateType<T extends CountryAggregateArgs> = {
+        [P in keyof T & keyof AggregateCountry]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregateLocation[P]>
-      : GetScalarType<T[P], AggregateLocation[P]>
+        : GetScalarType<T[P], AggregateCountry[P]>
+      : GetScalarType<T[P], AggregateCountry[P]>
   }
 
 
 
 
-  export type LocationGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    where?: LocationWhereInput
-    orderBy?: Enumerable<LocationOrderByWithAggregationInput>
-    by: LocationScalarFieldEnum[]
-    having?: LocationScalarWhereWithAggregatesInput
+  export type CountryGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: CountryWhereInput
+    orderBy?: Enumerable<CountryOrderByWithAggregationInput>
+    by: CountryScalarFieldEnum[]
+    having?: CountryScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: LocationCountAggregateInputType | true
-    _avg?: LocationAvgAggregateInputType
-    _sum?: LocationSumAggregateInputType
-    _min?: LocationMinAggregateInputType
-    _max?: LocationMaxAggregateInputType
+    _count?: CountryCountAggregateInputType | true
+    _avg?: CountryAvgAggregateInputType
+    _sum?: CountrySumAggregateInputType
+    _min?: CountryMinAggregateInputType
+    _max?: CountryMaxAggregateInputType
   }
 
 
-  export type LocationGroupByOutputType = {
+  export type CountryGroupByOutputType = {
     id: number
+    code: string
     name: string
-    description: string | null
-    _count: LocationCountAggregateOutputType | null
-    _avg: LocationAvgAggregateOutputType | null
-    _sum: LocationSumAggregateOutputType | null
-    _min: LocationMinAggregateOutputType | null
-    _max: LocationMaxAggregateOutputType | null
+    _count: CountryCountAggregateOutputType | null
+    _avg: CountryAvgAggregateOutputType | null
+    _sum: CountrySumAggregateOutputType | null
+    _min: CountryMinAggregateOutputType | null
+    _max: CountryMaxAggregateOutputType | null
   }
 
-  type GetLocationGroupByPayload<T extends LocationGroupByArgs> = Prisma.PrismaPromise<
+  type GetCountryGroupByPayload<T extends CountryGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickArray<LocationGroupByOutputType, T['by']> &
+      PickArray<CountryGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof LocationGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof CountryGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], LocationGroupByOutputType[P]>
-            : GetScalarType<T[P], LocationGroupByOutputType[P]>
+              : GetScalarType<T[P], CountryGroupByOutputType[P]>
+            : GetScalarType<T[P], CountryGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type LocationSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type CountrySelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    code?: boolean
     name?: boolean
-    description?: boolean
-  }, ExtArgs["result"]["location"]>
+    destinations?: boolean | Country$destinationsArgs<ExtArgs>
+    _count?: boolean | CountryCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["country"]>
 
-  export type LocationSelectScalar = {
+  export type CountrySelectScalar = {
     id?: boolean
+    code?: boolean
     name?: boolean
-    description?: boolean
+  }
+
+  export type CountryInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    destinations?: boolean | Country$destinationsArgs<ExtArgs>
+    _count?: boolean | CountryCountOutputTypeArgs<ExtArgs>
   }
 
 
-  type LocationGetPayload<S extends boolean | null | undefined | LocationArgs> = $Types.GetResult<LocationPayload, S>
+  type CountryGetPayload<S extends boolean | null | undefined | CountryArgs> = $Types.GetResult<CountryPayload, S>
 
-  type LocationCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
-    Omit<LocationFindManyArgs, 'select' | 'include'> & {
-      select?: LocationCountAggregateInputType | true
+  type CountryCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<CountryFindManyArgs, 'select' | 'include'> & {
+      select?: CountryCountAggregateInputType | true
     }
 
-  export interface LocationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Location'], meta: { name: 'Location' } }
+  export interface CountryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Country'], meta: { name: 'Country' } }
     /**
-     * Find zero or one Location that matches the filter.
-     * @param {LocationFindUniqueArgs} args - Arguments to find a Location
+     * Find zero or one Country that matches the filter.
+     * @param {CountryFindUniqueArgs} args - Arguments to find a Country
      * @example
-     * // Get one Location
-     * const location = await prisma.location.findUnique({
+     * // Get one Country
+     * const country = await prisma.country.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUnique<T extends LocationFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, LocationFindUniqueArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Location'> extends True ? Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+    findUnique<T extends CountryFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CountryFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Country'> extends True ? Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
 
     /**
-     * Find one Location that matches the filter or throw an error  with `error.code='P2025'` 
+     * Find one Country that matches the filter or throw an error  with `error.code='P2025'` 
      *     if no matches were found.
-     * @param {LocationFindUniqueOrThrowArgs} args - Arguments to find a Location
+     * @param {CountryFindUniqueOrThrowArgs} args - Arguments to find a Country
      * @example
-     * // Get one Location
-     * const location = await prisma.location.findUniqueOrThrow({
+     * // Get one Country
+     * const country = await prisma.country.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findUniqueOrThrow<T extends LocationFindUniqueOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, LocationFindUniqueOrThrowArgs<ExtArgs>>
-    ): Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+    findUniqueOrThrow<T extends CountryFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, CountryFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
 
     /**
-     * Find the first Location that matches the filter.
+     * Find the first Country that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LocationFindFirstArgs} args - Arguments to find a Location
+     * @param {CountryFindFirstArgs} args - Arguments to find a Country
      * @example
-     * // Get one Location
-     * const location = await prisma.location.findFirst({
+     * // Get one Country
+     * const country = await prisma.country.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirst<T extends LocationFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, LocationFindFirstArgs<ExtArgs>>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Location'> extends True ? Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+    findFirst<T extends CountryFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CountryFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Country'> extends True ? Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
 
     /**
-     * Find the first Location that matches the filter or
+     * Find the first Country that matches the filter or
      * throw `NotFoundError` if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LocationFindFirstOrThrowArgs} args - Arguments to find a Location
+     * @param {CountryFindFirstOrThrowArgs} args - Arguments to find a Country
      * @example
-     * // Get one Location
-     * const location = await prisma.location.findFirstOrThrow({
+     * // Get one Country
+     * const country = await prisma.country.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
     **/
-    findFirstOrThrow<T extends LocationFindFirstOrThrowArgs<ExtArgs>>(
-      args?: SelectSubset<T, LocationFindFirstOrThrowArgs<ExtArgs>>
-    ): Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+    findFirstOrThrow<T extends CountryFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, CountryFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
 
     /**
-     * Find zero or more Locations that matches the filter.
+     * Find zero or more Countries that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LocationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @param {CountryFindManyArgs=} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Locations
-     * const locations = await prisma.location.findMany()
+     * // Get all Countries
+     * const countries = await prisma.country.findMany()
      * 
-     * // Get first 10 Locations
-     * const locations = await prisma.location.findMany({ take: 10 })
+     * // Get first 10 Countries
+     * const countries = await prisma.country.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const locationWithIdOnly = await prisma.location.findMany({ select: { id: true } })
+     * const countryWithIdOnly = await prisma.country.findMany({ select: { id: true } })
      * 
     **/
-    findMany<T extends LocationFindManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, LocationFindManyArgs<ExtArgs>>
-    ): Prisma.PrismaPromise<$Types.GetResult<LocationPayload<ExtArgs>, T, 'findMany', never>>
+    findMany<T extends CountryFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, CountryFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findMany', never>>
 
     /**
-     * Create a Location.
-     * @param {LocationCreateArgs} args - Arguments to create a Location.
+     * Create a Country.
+     * @param {CountryCreateArgs} args - Arguments to create a Country.
      * @example
-     * // Create one Location
-     * const Location = await prisma.location.create({
+     * // Create one Country
+     * const Country = await prisma.country.create({
      *   data: {
-     *     // ... data to create a Location
+     *     // ... data to create a Country
      *   }
      * })
      * 
     **/
-    create<T extends LocationCreateArgs<ExtArgs>>(
-      args: SelectSubset<T, LocationCreateArgs<ExtArgs>>
-    ): Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+    create<T extends CountryCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, CountryCreateArgs<ExtArgs>>
+    ): Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
 
     /**
-     * Create many Locations.
-     *     @param {LocationCreateManyArgs} args - Arguments to create many Locations.
+     * Create many Countries.
+     *     @param {CountryCreateManyArgs} args - Arguments to create many Countries.
      *     @example
-     *     // Create many Locations
-     *     const location = await prisma.location.createMany({
+     *     // Create many Countries
+     *     const country = await prisma.country.createMany({
      *       data: {
      *         // ... provide data here
      *       }
      *     })
      *     
     **/
-    createMany<T extends LocationCreateManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, LocationCreateManyArgs<ExtArgs>>
+    createMany<T extends CountryCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, CountryCreateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Delete a Location.
-     * @param {LocationDeleteArgs} args - Arguments to delete one Location.
+     * Delete a Country.
+     * @param {CountryDeleteArgs} args - Arguments to delete one Country.
      * @example
-     * // Delete one Location
-     * const Location = await prisma.location.delete({
+     * // Delete one Country
+     * const Country = await prisma.country.delete({
      *   where: {
-     *     // ... filter to delete one Location
+     *     // ... filter to delete one Country
      *   }
      * })
      * 
     **/
-    delete<T extends LocationDeleteArgs<ExtArgs>>(
-      args: SelectSubset<T, LocationDeleteArgs<ExtArgs>>
-    ): Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+    delete<T extends CountryDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, CountryDeleteArgs<ExtArgs>>
+    ): Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
 
     /**
-     * Update one Location.
-     * @param {LocationUpdateArgs} args - Arguments to update one Location.
+     * Update one Country.
+     * @param {CountryUpdateArgs} args - Arguments to update one Country.
      * @example
-     * // Update one Location
-     * const location = await prisma.location.update({
+     * // Update one Country
+     * const country = await prisma.country.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1280,34 +1839,34 @@ export namespace Prisma {
      * })
      * 
     **/
-    update<T extends LocationUpdateArgs<ExtArgs>>(
-      args: SelectSubset<T, LocationUpdateArgs<ExtArgs>>
-    ): Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+    update<T extends CountryUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, CountryUpdateArgs<ExtArgs>>
+    ): Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
 
     /**
-     * Delete zero or more Locations.
-     * @param {LocationDeleteManyArgs} args - Arguments to filter Locations to delete.
+     * Delete zero or more Countries.
+     * @param {CountryDeleteManyArgs} args - Arguments to filter Countries to delete.
      * @example
-     * // Delete a few Locations
-     * const { count } = await prisma.location.deleteMany({
+     * // Delete a few Countries
+     * const { count } = await prisma.country.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
     **/
-    deleteMany<T extends LocationDeleteManyArgs<ExtArgs>>(
-      args?: SelectSubset<T, LocationDeleteManyArgs<ExtArgs>>
+    deleteMany<T extends CountryDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, CountryDeleteManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Locations.
+     * Update zero or more Countries.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LocationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {CountryUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Locations
-     * const location = await prisma.location.updateMany({
+     * // Update many Countries
+     * const country = await prisma.country.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -1317,59 +1876,59 @@ export namespace Prisma {
      * })
      * 
     **/
-    updateMany<T extends LocationUpdateManyArgs<ExtArgs>>(
-      args: SelectSubset<T, LocationUpdateManyArgs<ExtArgs>>
+    updateMany<T extends CountryUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, CountryUpdateManyArgs<ExtArgs>>
     ): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create or update one Location.
-     * @param {LocationUpsertArgs} args - Arguments to update or create a Location.
+     * Create or update one Country.
+     * @param {CountryUpsertArgs} args - Arguments to update or create a Country.
      * @example
-     * // Update or create a Location
-     * const location = await prisma.location.upsert({
+     * // Update or create a Country
+     * const country = await prisma.country.upsert({
      *   create: {
-     *     // ... data to create a Location
+     *     // ... data to create a Country
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Location we want to update
+     *     // ... the filter for the Country we want to update
      *   }
      * })
     **/
-    upsert<T extends LocationUpsertArgs<ExtArgs>>(
-      args: SelectSubset<T, LocationUpsertArgs<ExtArgs>>
-    ): Prisma__LocationClient<$Types.GetResult<LocationPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+    upsert<T extends CountryUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, CountryUpsertArgs<ExtArgs>>
+    ): Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
 
     /**
-     * Count the number of Locations.
+     * Count the number of Countries.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LocationCountArgs} args - Arguments to filter Locations to count.
+     * @param {CountryCountArgs} args - Arguments to filter Countries to count.
      * @example
-     * // Count the number of Locations
-     * const count = await prisma.location.count({
+     * // Count the number of Countries
+     * const count = await prisma.country.count({
      *   where: {
-     *     // ... the filter for the Locations we want to count
+     *     // ... the filter for the Countries we want to count
      *   }
      * })
     **/
-    count<T extends LocationCountArgs>(
-      args?: Subset<T, LocationCountArgs>,
+    count<T extends CountryCountArgs>(
+      args?: Subset<T, CountryCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], LocationCountAggregateOutputType>
+          : GetScalarType<T['select'], CountryCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Location.
+     * Allows you to perform aggregations operations on a Country.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LocationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {CountryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -1389,13 +1948,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends LocationAggregateArgs>(args: Subset<T, LocationAggregateArgs>): Prisma.PrismaPromise<GetLocationAggregateType<T>>
+    aggregate<T extends CountryAggregateArgs>(args: Subset<T, CountryAggregateArgs>): Prisma.PrismaPromise<GetCountryAggregateType<T>>
 
     /**
-     * Group by Location.
+     * Group by Country.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {LocationGroupByArgs} args - Group by arguments.
+     * @param {CountryGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -1410,14 +1969,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends LocationGroupByArgs,
+      T extends CountryGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: LocationGroupByArgs['orderBy'] }
-        : { orderBy?: LocationGroupByArgs['orderBy'] },
+        ? { orderBy: CountryGroupByArgs['orderBy'] }
+        : { orderBy?: CountryGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends TupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -1466,17 +2025,17 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, LocationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLocationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CountryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCountryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Location.
+   * The delegate class that acts as a "Promise-like" for Country.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__LocationClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+  export class Prisma__CountryClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
     private readonly _queryType;
     private readonly _rootField;
@@ -1491,6 +2050,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
+    destinations<T extends Country$destinationsArgs<ExtArgs> = {}>(args?: Subset<T, Country$destinationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -1520,23 +2080,27 @@ export namespace Prisma {
   // Custom InputTypes
 
   /**
-   * Location base type for findUnique actions
+   * Country base type for findUnique actions
    */
-  export type LocationFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * Filter, which Location to fetch.
+     * Choose, which related nodes to fetch as well.
      */
-    where: LocationWhereUniqueInput
+    include?: CountryInclude<ExtArgs> | null
+    /**
+     * Filter, which Country to fetch.
+     */
+    where: CountryWhereUniqueInput
   }
 
   /**
-   * Location findUnique
+   * Country findUnique
    */
-  export interface LocationFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends LocationFindUniqueArgsBase<ExtArgs> {
+  export interface CountryFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends CountryFindUniqueArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
@@ -1546,68 +2110,76 @@ export namespace Prisma {
       
 
   /**
-   * Location findUniqueOrThrow
+   * Country findUniqueOrThrow
    */
-  export type LocationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * Filter, which Location to fetch.
+     * Choose, which related nodes to fetch as well.
      */
-    where: LocationWhereUniqueInput
+    include?: CountryInclude<ExtArgs> | null
+    /**
+     * Filter, which Country to fetch.
+     */
+    where: CountryWhereUniqueInput
   }
 
 
   /**
-   * Location base type for findFirst actions
+   * Country base type for findFirst actions
    */
-  export type LocationFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * Filter, which Location to fetch.
+     * Choose, which related nodes to fetch as well.
      */
-    where?: LocationWhereInput
+    include?: CountryInclude<ExtArgs> | null
+    /**
+     * Filter, which Country to fetch.
+     */
+    where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Locations to fetch.
+     * Determine the order of Countries to fetch.
      */
-    orderBy?: Enumerable<LocationOrderByWithRelationInput>
+    orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Locations.
+     * Sets the position for searching for Countries.
      */
-    cursor?: LocationWhereUniqueInput
+    cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Locations from the position of the cursor.
+     * Take `±n` Countries from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Locations.
+     * Skip the first `n` Countries.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Locations.
+     * Filter by unique combinations of Countries.
      */
-    distinct?: Enumerable<LocationScalarFieldEnum>
+    distinct?: Enumerable<CountryScalarFieldEnum>
   }
 
   /**
-   * Location findFirst
+   * Country findFirst
    */
-  export interface LocationFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends LocationFindFirstArgsBase<ExtArgs> {
+  export interface CountryFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends CountryFindFirstArgsBase<ExtArgs> {
    /**
     * Throw an Error if query returns no results
     * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
@@ -1617,208 +2189,4149 @@ export namespace Prisma {
       
 
   /**
-   * Location findFirstOrThrow
+   * Country findFirstOrThrow
    */
-  export type LocationFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * Filter, which Location to fetch.
+     * Choose, which related nodes to fetch as well.
      */
-    where?: LocationWhereInput
+    include?: CountryInclude<ExtArgs> | null
+    /**
+     * Filter, which Country to fetch.
+     */
+    where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Locations to fetch.
+     * Determine the order of Countries to fetch.
      */
-    orderBy?: Enumerable<LocationOrderByWithRelationInput>
+    orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Locations.
+     * Sets the position for searching for Countries.
      */
-    cursor?: LocationWhereUniqueInput
+    cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Locations from the position of the cursor.
+     * Take `±n` Countries from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Locations.
+     * Skip the first `n` Countries.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Locations.
+     * Filter by unique combinations of Countries.
      */
-    distinct?: Enumerable<LocationScalarFieldEnum>
+    distinct?: Enumerable<CountryScalarFieldEnum>
   }
 
 
   /**
-   * Location findMany
+   * Country findMany
    */
-  export type LocationFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * Filter, which Locations to fetch.
+     * Choose, which related nodes to fetch as well.
      */
-    where?: LocationWhereInput
+    include?: CountryInclude<ExtArgs> | null
+    /**
+     * Filter, which Countries to fetch.
+     */
+    where?: CountryWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Locations to fetch.
+     * Determine the order of Countries to fetch.
      */
-    orderBy?: Enumerable<LocationOrderByWithRelationInput>
+    orderBy?: Enumerable<CountryOrderByWithRelationInput>
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Locations.
+     * Sets the position for listing Countries.
      */
-    cursor?: LocationWhereUniqueInput
+    cursor?: CountryWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Locations from the position of the cursor.
+     * Take `±n` Countries from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Locations.
+     * Skip the first `n` Countries.
      */
     skip?: number
-    distinct?: Enumerable<LocationScalarFieldEnum>
+    distinct?: Enumerable<CountryScalarFieldEnum>
   }
 
 
   /**
-   * Location create
+   * Country create
    */
-  export type LocationCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * The data needed to create a Location.
+     * Choose, which related nodes to fetch as well.
      */
-    data: XOR<LocationCreateInput, LocationUncheckedCreateInput>
+    include?: CountryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Country.
+     */
+    data: XOR<CountryCreateInput, CountryUncheckedCreateInput>
   }
 
 
   /**
-   * Location createMany
+   * Country createMany
    */
-  export type LocationCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Locations.
+     * The data used to create many Countries.
      */
-    data: Enumerable<LocationCreateManyInput>
+    data: Enumerable<CountryCreateManyInput>
     skipDuplicates?: boolean
   }
 
 
   /**
-   * Location update
+   * Country update
    */
-  export type LocationUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * The data needed to update a Location.
+     * Choose, which related nodes to fetch as well.
      */
-    data: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
+    include?: CountryInclude<ExtArgs> | null
     /**
-     * Choose, which Location to update.
+     * The data needed to update a Country.
      */
-    where: LocationWhereUniqueInput
+    data: XOR<CountryUpdateInput, CountryUncheckedUpdateInput>
+    /**
+     * Choose, which Country to update.
+     */
+    where: CountryWhereUniqueInput
   }
 
 
   /**
-   * Location updateMany
+   * Country updateMany
    */
-  export type LocationUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Locations.
+     * The data used to update Countries.
      */
-    data: XOR<LocationUpdateManyMutationInput, LocationUncheckedUpdateManyInput>
+    data: XOR<CountryUpdateManyMutationInput, CountryUncheckedUpdateManyInput>
     /**
-     * Filter which Locations to update
+     * Filter which Countries to update
      */
-    where?: LocationWhereInput
+    where?: CountryWhereInput
   }
 
 
   /**
-   * Location upsert
+   * Country upsert
    */
-  export type LocationUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * The filter to search for the Location to update in case it exists.
+     * Choose, which related nodes to fetch as well.
      */
-    where: LocationWhereUniqueInput
+    include?: CountryInclude<ExtArgs> | null
     /**
-     * In case the Location found by the `where` argument doesn't exist, create a new Location with this data.
+     * The filter to search for the Country to update in case it exists.
      */
-    create: XOR<LocationCreateInput, LocationUncheckedCreateInput>
+    where: CountryWhereUniqueInput
     /**
-     * In case the Location was found with the provided `where` argument, update it with this data.
+     * In case the Country found by the `where` argument doesn't exist, create a new Country with this data.
      */
-    update: XOR<LocationUpdateInput, LocationUncheckedUpdateInput>
+    create: XOR<CountryCreateInput, CountryUncheckedCreateInput>
+    /**
+     * In case the Country was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CountryUpdateInput, CountryUncheckedUpdateInput>
   }
 
 
   /**
-   * Location delete
+   * Country delete
    */
-  export type LocationDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Country
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: CountrySelect<ExtArgs> | null
     /**
-     * Filter which Location to delete.
+     * Choose, which related nodes to fetch as well.
      */
-    where: LocationWhereUniqueInput
+    include?: CountryInclude<ExtArgs> | null
+    /**
+     * Filter which Country to delete.
+     */
+    where: CountryWhereUniqueInput
   }
 
 
   /**
-   * Location deleteMany
+   * Country deleteMany
    */
-  export type LocationDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type CountryDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Locations to delete
+     * Filter which Countries to delete
      */
-    where?: LocationWhereInput
+    where?: CountryWhereInput
   }
 
 
   /**
-   * Location without action
+   * Country.destinations
    */
-  export type LocationArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type Country$destinationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Location
+     * Select specific fields to fetch from the Destination
      */
-    select?: LocationSelect<ExtArgs> | null
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    where?: DestinationWhereInput
+    orderBy?: Enumerable<DestinationOrderByWithRelationInput>
+    cursor?: DestinationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<DestinationScalarFieldEnum>
+  }
+
+
+  /**
+   * Country without action
+   */
+  export type CountryArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Country
+     */
+    select?: CountrySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: CountryInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model Destination
+   */
+
+
+  export type AggregateDestination = {
+    _count: DestinationCountAggregateOutputType | null
+    _avg: DestinationAvgAggregateOutputType | null
+    _sum: DestinationSumAggregateOutputType | null
+    _min: DestinationMinAggregateOutputType | null
+    _max: DestinationMaxAggregateOutputType | null
+  }
+
+  export type DestinationAvgAggregateOutputType = {
+    id: number | null
+    countryId: number | null
+  }
+
+  export type DestinationSumAggregateOutputType = {
+    id: number | null
+    countryId: number | null
+  }
+
+  export type DestinationMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    region: string | null
+    countryId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DestinationMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    region: string | null
+    countryId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DestinationCountAggregateOutputType = {
+    id: number
+    name: number
+    region: number
+    countryId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DestinationAvgAggregateInputType = {
+    id?: true
+    countryId?: true
+  }
+
+  export type DestinationSumAggregateInputType = {
+    id?: true
+    countryId?: true
+  }
+
+  export type DestinationMinAggregateInputType = {
+    id?: true
+    name?: true
+    region?: true
+    countryId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DestinationMaxAggregateInputType = {
+    id?: true
+    name?: true
+    region?: true
+    countryId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DestinationCountAggregateInputType = {
+    id?: true
+    name?: true
+    region?: true
+    countryId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DestinationAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Destination to aggregate.
+     */
+    where?: DestinationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Destinations to fetch.
+     */
+    orderBy?: Enumerable<DestinationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DestinationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Destinations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Destinations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Destinations
+    **/
+    _count?: true | DestinationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DestinationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DestinationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DestinationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DestinationMaxAggregateInputType
+  }
+
+  export type GetDestinationAggregateType<T extends DestinationAggregateArgs> = {
+        [P in keyof T & keyof AggregateDestination]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDestination[P]>
+      : GetScalarType<T[P], AggregateDestination[P]>
+  }
+
+
+
+
+  export type DestinationGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: DestinationWhereInput
+    orderBy?: Enumerable<DestinationOrderByWithAggregationInput>
+    by: DestinationScalarFieldEnum[]
+    having?: DestinationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DestinationCountAggregateInputType | true
+    _avg?: DestinationAvgAggregateInputType
+    _sum?: DestinationSumAggregateInputType
+    _min?: DestinationMinAggregateInputType
+    _max?: DestinationMaxAggregateInputType
+  }
+
+
+  export type DestinationGroupByOutputType = {
+    id: number
+    name: string
+    region: string
+    countryId: number
+    createdAt: Date
+    updatedAt: Date
+    _count: DestinationCountAggregateOutputType | null
+    _avg: DestinationAvgAggregateOutputType | null
+    _sum: DestinationSumAggregateOutputType | null
+    _min: DestinationMinAggregateOutputType | null
+    _max: DestinationMaxAggregateOutputType | null
+  }
+
+  type GetDestinationGroupByPayload<T extends DestinationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<DestinationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DestinationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DestinationGroupByOutputType[P]>
+            : GetScalarType<T[P], DestinationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DestinationSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    region?: boolean
+    countryId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    attractions?: boolean | Destination$attractionsArgs<ExtArgs>
+    country?: boolean | CountryArgs<ExtArgs>
+    images?: boolean | Destination$imagesArgs<ExtArgs>
+    _count?: boolean | DestinationCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["destination"]>
+
+  export type DestinationSelectScalar = {
+    id?: boolean
+    name?: boolean
+    region?: boolean
+    countryId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DestinationInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    attractions?: boolean | Destination$attractionsArgs<ExtArgs>
+    country?: boolean | CountryArgs<ExtArgs>
+    images?: boolean | Destination$imagesArgs<ExtArgs>
+    _count?: boolean | DestinationCountOutputTypeArgs<ExtArgs>
+  }
+
+
+  type DestinationGetPayload<S extends boolean | null | undefined | DestinationArgs> = $Types.GetResult<DestinationPayload, S>
+
+  type DestinationCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<DestinationFindManyArgs, 'select' | 'include'> & {
+      select?: DestinationCountAggregateInputType | true
+    }
+
+  export interface DestinationDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Destination'], meta: { name: 'Destination' } }
+    /**
+     * Find zero or one Destination that matches the filter.
+     * @param {DestinationFindUniqueArgs} args - Arguments to find a Destination
+     * @example
+     * // Get one Destination
+     * const destination = await prisma.destination.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends DestinationFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, DestinationFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Destination'> extends True ? Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Destination that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {DestinationFindUniqueOrThrowArgs} args - Arguments to find a Destination
+     * @example
+     * // Get one Destination
+     * const destination = await prisma.destination.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends DestinationFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Destination that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationFindFirstArgs} args - Arguments to find a Destination
+     * @example
+     * // Get one Destination
+     * const destination = await prisma.destination.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends DestinationFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, DestinationFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Destination'> extends True ? Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Destination that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationFindFirstOrThrowArgs} args - Arguments to find a Destination
+     * @example
+     * // Get one Destination
+     * const destination = await prisma.destination.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends DestinationFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Destinations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Destinations
+     * const destinations = await prisma.destination.findMany()
+     * 
+     * // Get first 10 Destinations
+     * const destinations = await prisma.destination.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const destinationWithIdOnly = await prisma.destination.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends DestinationFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Destination.
+     * @param {DestinationCreateArgs} args - Arguments to create a Destination.
+     * @example
+     * // Create one Destination
+     * const Destination = await prisma.destination.create({
+     *   data: {
+     *     // ... data to create a Destination
+     *   }
+     * })
+     * 
+    **/
+    create<T extends DestinationCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationCreateArgs<ExtArgs>>
+    ): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Destinations.
+     *     @param {DestinationCreateManyArgs} args - Arguments to create many Destinations.
+     *     @example
+     *     // Create many Destinations
+     *     const destination = await prisma.destination.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends DestinationCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Destination.
+     * @param {DestinationDeleteArgs} args - Arguments to delete one Destination.
+     * @example
+     * // Delete one Destination
+     * const Destination = await prisma.destination.delete({
+     *   where: {
+     *     // ... filter to delete one Destination
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends DestinationDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationDeleteArgs<ExtArgs>>
+    ): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Destination.
+     * @param {DestinationUpdateArgs} args - Arguments to update one Destination.
+     * @example
+     * // Update one Destination
+     * const destination = await prisma.destination.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends DestinationUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationUpdateArgs<ExtArgs>>
+    ): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Destinations.
+     * @param {DestinationDeleteManyArgs} args - Arguments to filter Destinations to delete.
+     * @example
+     * // Delete a few Destinations
+     * const { count } = await prisma.destination.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends DestinationDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Destinations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Destinations
+     * const destination = await prisma.destination.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends DestinationUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Destination.
+     * @param {DestinationUpsertArgs} args - Arguments to update or create a Destination.
+     * @example
+     * // Update or create a Destination
+     * const destination = await prisma.destination.upsert({
+     *   create: {
+     *     // ... data to create a Destination
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Destination we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends DestinationUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationUpsertArgs<ExtArgs>>
+    ): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Destinations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationCountArgs} args - Arguments to filter Destinations to count.
+     * @example
+     * // Count the number of Destinations
+     * const count = await prisma.destination.count({
+     *   where: {
+     *     // ... the filter for the Destinations we want to count
+     *   }
+     * })
+    **/
+    count<T extends DestinationCountArgs>(
+      args?: Subset<T, DestinationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DestinationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Destination.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DestinationAggregateArgs>(args: Subset<T, DestinationAggregateArgs>): Prisma.PrismaPromise<GetDestinationAggregateType<T>>
+
+    /**
+     * Group by Destination.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DestinationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DestinationGroupByArgs['orderBy'] }
+        : { orderBy?: DestinationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DestinationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDestinationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Destination.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__DestinationClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    attractions<T extends Destination$attractionsArgs<ExtArgs> = {}>(args?: Subset<T, Destination$attractionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    country<T extends CountryArgs<ExtArgs> = {}>(args?: Subset<T, CountryArgs<ExtArgs>>): Prisma__CountryClient<$Types.GetResult<CountryPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    images<T extends Destination$imagesArgs<ExtArgs> = {}>(args?: Subset<T, Destination$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Destination base type for findUnique actions
+   */
+  export type DestinationFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * Filter, which Destination to fetch.
+     */
+    where: DestinationWhereUniqueInput
+  }
+
+  /**
+   * Destination findUnique
+   */
+  export interface DestinationFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends DestinationFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Destination findUniqueOrThrow
+   */
+  export type DestinationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * Filter, which Destination to fetch.
+     */
+    where: DestinationWhereUniqueInput
+  }
+
+
+  /**
+   * Destination base type for findFirst actions
+   */
+  export type DestinationFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * Filter, which Destination to fetch.
+     */
+    where?: DestinationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Destinations to fetch.
+     */
+    orderBy?: Enumerable<DestinationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Destinations.
+     */
+    cursor?: DestinationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Destinations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Destinations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Destinations.
+     */
+    distinct?: Enumerable<DestinationScalarFieldEnum>
+  }
+
+  /**
+   * Destination findFirst
+   */
+  export interface DestinationFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends DestinationFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Destination findFirstOrThrow
+   */
+  export type DestinationFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * Filter, which Destination to fetch.
+     */
+    where?: DestinationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Destinations to fetch.
+     */
+    orderBy?: Enumerable<DestinationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Destinations.
+     */
+    cursor?: DestinationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Destinations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Destinations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Destinations.
+     */
+    distinct?: Enumerable<DestinationScalarFieldEnum>
+  }
+
+
+  /**
+   * Destination findMany
+   */
+  export type DestinationFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * Filter, which Destinations to fetch.
+     */
+    where?: DestinationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Destinations to fetch.
+     */
+    orderBy?: Enumerable<DestinationOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Destinations.
+     */
+    cursor?: DestinationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Destinations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Destinations.
+     */
+    skip?: number
+    distinct?: Enumerable<DestinationScalarFieldEnum>
+  }
+
+
+  /**
+   * Destination create
+   */
+  export type DestinationCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Destination.
+     */
+    data: XOR<DestinationCreateInput, DestinationUncheckedCreateInput>
+  }
+
+
+  /**
+   * Destination createMany
+   */
+  export type DestinationCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Destinations.
+     */
+    data: Enumerable<DestinationCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Destination update
+   */
+  export type DestinationUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Destination.
+     */
+    data: XOR<DestinationUpdateInput, DestinationUncheckedUpdateInput>
+    /**
+     * Choose, which Destination to update.
+     */
+    where: DestinationWhereUniqueInput
+  }
+
+
+  /**
+   * Destination updateMany
+   */
+  export type DestinationUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Destinations.
+     */
+    data: XOR<DestinationUpdateManyMutationInput, DestinationUncheckedUpdateManyInput>
+    /**
+     * Filter which Destinations to update
+     */
+    where?: DestinationWhereInput
+  }
+
+
+  /**
+   * Destination upsert
+   */
+  export type DestinationUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Destination to update in case it exists.
+     */
+    where: DestinationWhereUniqueInput
+    /**
+     * In case the Destination found by the `where` argument doesn't exist, create a new Destination with this data.
+     */
+    create: XOR<DestinationCreateInput, DestinationUncheckedCreateInput>
+    /**
+     * In case the Destination was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DestinationUpdateInput, DestinationUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Destination delete
+   */
+  export type DestinationDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+    /**
+     * Filter which Destination to delete.
+     */
+    where: DestinationWhereUniqueInput
+  }
+
+
+  /**
+   * Destination deleteMany
+   */
+  export type DestinationDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Destinations to delete
+     */
+    where?: DestinationWhereInput
+  }
+
+
+  /**
+   * Destination.attractions
+   */
+  export type Destination$attractionsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    where?: AttractionWhereInput
+    orderBy?: Enumerable<AttractionOrderByWithRelationInput>
+    cursor?: AttractionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<AttractionScalarFieldEnum>
+  }
+
+
+  /**
+   * Destination.images
+   */
+  export type Destination$imagesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    where?: DestinationImageWhereInput
+    orderBy?: Enumerable<DestinationImageOrderByWithRelationInput>
+    cursor?: DestinationImageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<DestinationImageScalarFieldEnum>
+  }
+
+
+  /**
+   * Destination without action
+   */
+  export type DestinationArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Destination
+     */
+    select?: DestinationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model Attraction
+   */
+
+
+  export type AggregateAttraction = {
+    _count: AttractionCountAggregateOutputType | null
+    _avg: AttractionAvgAggregateOutputType | null
+    _sum: AttractionSumAggregateOutputType | null
+    _min: AttractionMinAggregateOutputType | null
+    _max: AttractionMaxAggregateOutputType | null
+  }
+
+  export type AttractionAvgAggregateOutputType = {
+    id: number | null
+    destinationId: number | null
+  }
+
+  export type AttractionSumAggregateOutputType = {
+    id: number | null
+    destinationId: number | null
+  }
+
+  export type AttractionMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    destinationId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttractionMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    destinationId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttractionCountAggregateOutputType = {
+    id: number
+    name: number
+    destinationId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AttractionAvgAggregateInputType = {
+    id?: true
+    destinationId?: true
+  }
+
+  export type AttractionSumAggregateInputType = {
+    id?: true
+    destinationId?: true
+  }
+
+  export type AttractionMinAggregateInputType = {
+    id?: true
+    name?: true
+    destinationId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttractionMaxAggregateInputType = {
+    id?: true
+    name?: true
+    destinationId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttractionCountAggregateInputType = {
+    id?: true
+    name?: true
+    destinationId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AttractionAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attraction to aggregate.
+     */
+    where?: AttractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attractions to fetch.
+     */
+    orderBy?: Enumerable<AttractionOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attractions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Attractions
+    **/
+    _count?: true | AttractionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AttractionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AttractionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttractionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttractionMaxAggregateInputType
+  }
+
+  export type GetAttractionAggregateType<T extends AttractionAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttraction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttraction[P]>
+      : GetScalarType<T[P], AggregateAttraction[P]>
+  }
+
+
+
+
+  export type AttractionGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: AttractionWhereInput
+    orderBy?: Enumerable<AttractionOrderByWithAggregationInput>
+    by: AttractionScalarFieldEnum[]
+    having?: AttractionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttractionCountAggregateInputType | true
+    _avg?: AttractionAvgAggregateInputType
+    _sum?: AttractionSumAggregateInputType
+    _min?: AttractionMinAggregateInputType
+    _max?: AttractionMaxAggregateInputType
+  }
+
+
+  export type AttractionGroupByOutputType = {
+    id: number
+    name: string
+    destinationId: number
+    createdAt: Date
+    updatedAt: Date
+    _count: AttractionCountAggregateOutputType | null
+    _avg: AttractionAvgAggregateOutputType | null
+    _sum: AttractionSumAggregateOutputType | null
+    _min: AttractionMinAggregateOutputType | null
+    _max: AttractionMaxAggregateOutputType | null
+  }
+
+  type GetAttractionGroupByPayload<T extends AttractionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<AttractionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttractionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttractionGroupByOutputType[P]>
+            : GetScalarType<T[P], AttractionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttractionSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    destinationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    destination?: boolean | DestinationArgs<ExtArgs>
+    images?: boolean | Attraction$imagesArgs<ExtArgs>
+    _count?: boolean | AttractionCountOutputTypeArgs<ExtArgs>
+  }, ExtArgs["result"]["attraction"]>
+
+  export type AttractionSelectScalar = {
+    id?: boolean
+    name?: boolean
+    destinationId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AttractionInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    destination?: boolean | DestinationArgs<ExtArgs>
+    images?: boolean | Attraction$imagesArgs<ExtArgs>
+    _count?: boolean | AttractionCountOutputTypeArgs<ExtArgs>
+  }
+
+
+  type AttractionGetPayload<S extends boolean | null | undefined | AttractionArgs> = $Types.GetResult<AttractionPayload, S>
+
+  type AttractionCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<AttractionFindManyArgs, 'select' | 'include'> & {
+      select?: AttractionCountAggregateInputType | true
+    }
+
+  export interface AttractionDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Attraction'], meta: { name: 'Attraction' } }
+    /**
+     * Find zero or one Attraction that matches the filter.
+     * @param {AttractionFindUniqueArgs} args - Arguments to find a Attraction
+     * @example
+     * // Get one Attraction
+     * const attraction = await prisma.attraction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends AttractionFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, AttractionFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Attraction'> extends True ? Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one Attraction that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {AttractionFindUniqueOrThrowArgs} args - Arguments to find a Attraction
+     * @example
+     * // Get one Attraction
+     * const attraction = await prisma.attraction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends AttractionFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first Attraction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionFindFirstArgs} args - Arguments to find a Attraction
+     * @example
+     * // Get one Attraction
+     * const attraction = await prisma.attraction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends AttractionFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, AttractionFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Attraction'> extends True ? Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first Attraction that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionFindFirstOrThrowArgs} args - Arguments to find a Attraction
+     * @example
+     * // Get one Attraction
+     * const attraction = await prisma.attraction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends AttractionFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more Attractions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Attractions
+     * const attractions = await prisma.attraction.findMany()
+     * 
+     * // Get first 10 Attractions
+     * const attractions = await prisma.attraction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attractionWithIdOnly = await prisma.attraction.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends AttractionFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a Attraction.
+     * @param {AttractionCreateArgs} args - Arguments to create a Attraction.
+     * @example
+     * // Create one Attraction
+     * const Attraction = await prisma.attraction.create({
+     *   data: {
+     *     // ... data to create a Attraction
+     *   }
+     * })
+     * 
+    **/
+    create<T extends AttractionCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionCreateArgs<ExtArgs>>
+    ): Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many Attractions.
+     *     @param {AttractionCreateManyArgs} args - Arguments to create many Attractions.
+     *     @example
+     *     // Create many Attractions
+     *     const attraction = await prisma.attraction.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends AttractionCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Attraction.
+     * @param {AttractionDeleteArgs} args - Arguments to delete one Attraction.
+     * @example
+     * // Delete one Attraction
+     * const Attraction = await prisma.attraction.delete({
+     *   where: {
+     *     // ... filter to delete one Attraction
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends AttractionDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionDeleteArgs<ExtArgs>>
+    ): Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one Attraction.
+     * @param {AttractionUpdateArgs} args - Arguments to update one Attraction.
+     * @example
+     * // Update one Attraction
+     * const attraction = await prisma.attraction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends AttractionUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionUpdateArgs<ExtArgs>>
+    ): Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more Attractions.
+     * @param {AttractionDeleteManyArgs} args - Arguments to filter Attractions to delete.
+     * @example
+     * // Delete a few Attractions
+     * const { count } = await prisma.attraction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends AttractionDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attractions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Attractions
+     * const attraction = await prisma.attraction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends AttractionUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Attraction.
+     * @param {AttractionUpsertArgs} args - Arguments to update or create a Attraction.
+     * @example
+     * // Update or create a Attraction
+     * const attraction = await prisma.attraction.upsert({
+     *   create: {
+     *     // ... data to create a Attraction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Attraction we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends AttractionUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionUpsertArgs<ExtArgs>>
+    ): Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of Attractions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionCountArgs} args - Arguments to filter Attractions to count.
+     * @example
+     * // Count the number of Attractions
+     * const count = await prisma.attraction.count({
+     *   where: {
+     *     // ... the filter for the Attractions we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttractionCountArgs>(
+      args?: Subset<T, AttractionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttractionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Attraction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttractionAggregateArgs>(args: Subset<T, AttractionAggregateArgs>): Prisma.PrismaPromise<GetAttractionAggregateType<T>>
+
+    /**
+     * Group by Attraction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttractionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttractionGroupByArgs['orderBy'] }
+        : { orderBy?: AttractionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttractionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttractionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Attraction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__AttractionClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    destination<T extends DestinationArgs<ExtArgs> = {}>(args?: Subset<T, DestinationArgs<ExtArgs>>): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    images<T extends Attraction$imagesArgs<ExtArgs> = {}>(args?: Subset<T, Attraction$imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findMany', never>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Attraction base type for findUnique actions
+   */
+  export type AttractionFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * Filter, which Attraction to fetch.
+     */
+    where: AttractionWhereUniqueInput
+  }
+
+  /**
+   * Attraction findUnique
+   */
+  export interface AttractionFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends AttractionFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Attraction findUniqueOrThrow
+   */
+  export type AttractionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * Filter, which Attraction to fetch.
+     */
+    where: AttractionWhereUniqueInput
+  }
+
+
+  /**
+   * Attraction base type for findFirst actions
+   */
+  export type AttractionFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * Filter, which Attraction to fetch.
+     */
+    where?: AttractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attractions to fetch.
+     */
+    orderBy?: Enumerable<AttractionOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attractions.
+     */
+    cursor?: AttractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attractions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attractions.
+     */
+    distinct?: Enumerable<AttractionScalarFieldEnum>
+  }
+
+  /**
+   * Attraction findFirst
+   */
+  export interface AttractionFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends AttractionFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Attraction findFirstOrThrow
+   */
+  export type AttractionFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * Filter, which Attraction to fetch.
+     */
+    where?: AttractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attractions to fetch.
+     */
+    orderBy?: Enumerable<AttractionOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attractions.
+     */
+    cursor?: AttractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attractions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attractions.
+     */
+    distinct?: Enumerable<AttractionScalarFieldEnum>
+  }
+
+
+  /**
+   * Attraction findMany
+   */
+  export type AttractionFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * Filter, which Attractions to fetch.
+     */
+    where?: AttractionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attractions to fetch.
+     */
+    orderBy?: Enumerable<AttractionOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Attractions.
+     */
+    cursor?: AttractionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attractions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attractions.
+     */
+    skip?: number
+    distinct?: Enumerable<AttractionScalarFieldEnum>
+  }
+
+
+  /**
+   * Attraction create
+   */
+  export type AttractionCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Attraction.
+     */
+    data: XOR<AttractionCreateInput, AttractionUncheckedCreateInput>
+  }
+
+
+  /**
+   * Attraction createMany
+   */
+  export type AttractionCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Attractions.
+     */
+    data: Enumerable<AttractionCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Attraction update
+   */
+  export type AttractionUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Attraction.
+     */
+    data: XOR<AttractionUpdateInput, AttractionUncheckedUpdateInput>
+    /**
+     * Choose, which Attraction to update.
+     */
+    where: AttractionWhereUniqueInput
+  }
+
+
+  /**
+   * Attraction updateMany
+   */
+  export type AttractionUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Attractions.
+     */
+    data: XOR<AttractionUpdateManyMutationInput, AttractionUncheckedUpdateManyInput>
+    /**
+     * Filter which Attractions to update
+     */
+    where?: AttractionWhereInput
+  }
+
+
+  /**
+   * Attraction upsert
+   */
+  export type AttractionUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Attraction to update in case it exists.
+     */
+    where: AttractionWhereUniqueInput
+    /**
+     * In case the Attraction found by the `where` argument doesn't exist, create a new Attraction with this data.
+     */
+    create: XOR<AttractionCreateInput, AttractionUncheckedCreateInput>
+    /**
+     * In case the Attraction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttractionUpdateInput, AttractionUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Attraction delete
+   */
+  export type AttractionDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+    /**
+     * Filter which Attraction to delete.
+     */
+    where: AttractionWhereUniqueInput
+  }
+
+
+  /**
+   * Attraction deleteMany
+   */
+  export type AttractionDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attractions to delete
+     */
+    where?: AttractionWhereInput
+  }
+
+
+  /**
+   * Attraction.images
+   */
+  export type Attraction$imagesArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    where?: AttractionImageWhereInput
+    orderBy?: Enumerable<AttractionImageOrderByWithRelationInput>
+    cursor?: AttractionImageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Enumerable<AttractionImageScalarFieldEnum>
+  }
+
+
+  /**
+   * Attraction without action
+   */
+  export type AttractionArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attraction
+     */
+    select?: AttractionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model DestinationImage
+   */
+
+
+  export type AggregateDestinationImage = {
+    _count: DestinationImageCountAggregateOutputType | null
+    _avg: DestinationImageAvgAggregateOutputType | null
+    _sum: DestinationImageSumAggregateOutputType | null
+    _min: DestinationImageMinAggregateOutputType | null
+    _max: DestinationImageMaxAggregateOutputType | null
+  }
+
+  export type DestinationImageAvgAggregateOutputType = {
+    destinationId: number | null
+  }
+
+  export type DestinationImageSumAggregateOutputType = {
+    destinationId: number | null
+  }
+
+  export type DestinationImageMinAggregateOutputType = {
+    id: string | null
+    url: string | null
+    destinationId: number | null
+  }
+
+  export type DestinationImageMaxAggregateOutputType = {
+    id: string | null
+    url: string | null
+    destinationId: number | null
+  }
+
+  export type DestinationImageCountAggregateOutputType = {
+    id: number
+    url: number
+    destinationId: number
+    _all: number
+  }
+
+
+  export type DestinationImageAvgAggregateInputType = {
+    destinationId?: true
+  }
+
+  export type DestinationImageSumAggregateInputType = {
+    destinationId?: true
+  }
+
+  export type DestinationImageMinAggregateInputType = {
+    id?: true
+    url?: true
+    destinationId?: true
+  }
+
+  export type DestinationImageMaxAggregateInputType = {
+    id?: true
+    url?: true
+    destinationId?: true
+  }
+
+  export type DestinationImageCountAggregateInputType = {
+    id?: true
+    url?: true
+    destinationId?: true
+    _all?: true
+  }
+
+  export type DestinationImageAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DestinationImage to aggregate.
+     */
+    where?: DestinationImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DestinationImages to fetch.
+     */
+    orderBy?: Enumerable<DestinationImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DestinationImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DestinationImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DestinationImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DestinationImages
+    **/
+    _count?: true | DestinationImageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DestinationImageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DestinationImageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DestinationImageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DestinationImageMaxAggregateInputType
+  }
+
+  export type GetDestinationImageAggregateType<T extends DestinationImageAggregateArgs> = {
+        [P in keyof T & keyof AggregateDestinationImage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDestinationImage[P]>
+      : GetScalarType<T[P], AggregateDestinationImage[P]>
+  }
+
+
+
+
+  export type DestinationImageGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: DestinationImageWhereInput
+    orderBy?: Enumerable<DestinationImageOrderByWithAggregationInput>
+    by: DestinationImageScalarFieldEnum[]
+    having?: DestinationImageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DestinationImageCountAggregateInputType | true
+    _avg?: DestinationImageAvgAggregateInputType
+    _sum?: DestinationImageSumAggregateInputType
+    _min?: DestinationImageMinAggregateInputType
+    _max?: DestinationImageMaxAggregateInputType
+  }
+
+
+  export type DestinationImageGroupByOutputType = {
+    id: string
+    url: string
+    destinationId: number
+    _count: DestinationImageCountAggregateOutputType | null
+    _avg: DestinationImageAvgAggregateOutputType | null
+    _sum: DestinationImageSumAggregateOutputType | null
+    _min: DestinationImageMinAggregateOutputType | null
+    _max: DestinationImageMaxAggregateOutputType | null
+  }
+
+  type GetDestinationImageGroupByPayload<T extends DestinationImageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<DestinationImageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DestinationImageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DestinationImageGroupByOutputType[P]>
+            : GetScalarType<T[P], DestinationImageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DestinationImageSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    url?: boolean
+    destinationId?: boolean
+    destination?: boolean | DestinationArgs<ExtArgs>
+  }, ExtArgs["result"]["destinationImage"]>
+
+  export type DestinationImageSelectScalar = {
+    id?: boolean
+    url?: boolean
+    destinationId?: boolean
+  }
+
+  export type DestinationImageInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    destination?: boolean | DestinationArgs<ExtArgs>
+  }
+
+
+  type DestinationImageGetPayload<S extends boolean | null | undefined | DestinationImageArgs> = $Types.GetResult<DestinationImagePayload, S>
+
+  type DestinationImageCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<DestinationImageFindManyArgs, 'select' | 'include'> & {
+      select?: DestinationImageCountAggregateInputType | true
+    }
+
+  export interface DestinationImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DestinationImage'], meta: { name: 'DestinationImage' } }
+    /**
+     * Find zero or one DestinationImage that matches the filter.
+     * @param {DestinationImageFindUniqueArgs} args - Arguments to find a DestinationImage
+     * @example
+     * // Get one DestinationImage
+     * const destinationImage = await prisma.destinationImage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends DestinationImageFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, DestinationImageFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'DestinationImage'> extends True ? Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one DestinationImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {DestinationImageFindUniqueOrThrowArgs} args - Arguments to find a DestinationImage
+     * @example
+     * // Get one DestinationImage
+     * const destinationImage = await prisma.destinationImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends DestinationImageFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationImageFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first DestinationImage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationImageFindFirstArgs} args - Arguments to find a DestinationImage
+     * @example
+     * // Get one DestinationImage
+     * const destinationImage = await prisma.destinationImage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends DestinationImageFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, DestinationImageFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'DestinationImage'> extends True ? Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first DestinationImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationImageFindFirstOrThrowArgs} args - Arguments to find a DestinationImage
+     * @example
+     * // Get one DestinationImage
+     * const destinationImage = await prisma.destinationImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends DestinationImageFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationImageFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more DestinationImages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationImageFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DestinationImages
+     * const destinationImages = await prisma.destinationImage.findMany()
+     * 
+     * // Get first 10 DestinationImages
+     * const destinationImages = await prisma.destinationImage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const destinationImageWithIdOnly = await prisma.destinationImage.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends DestinationImageFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationImageFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a DestinationImage.
+     * @param {DestinationImageCreateArgs} args - Arguments to create a DestinationImage.
+     * @example
+     * // Create one DestinationImage
+     * const DestinationImage = await prisma.destinationImage.create({
+     *   data: {
+     *     // ... data to create a DestinationImage
+     *   }
+     * })
+     * 
+    **/
+    create<T extends DestinationImageCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationImageCreateArgs<ExtArgs>>
+    ): Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many DestinationImages.
+     *     @param {DestinationImageCreateManyArgs} args - Arguments to create many DestinationImages.
+     *     @example
+     *     // Create many DestinationImages
+     *     const destinationImage = await prisma.destinationImage.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends DestinationImageCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationImageCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a DestinationImage.
+     * @param {DestinationImageDeleteArgs} args - Arguments to delete one DestinationImage.
+     * @example
+     * // Delete one DestinationImage
+     * const DestinationImage = await prisma.destinationImage.delete({
+     *   where: {
+     *     // ... filter to delete one DestinationImage
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends DestinationImageDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationImageDeleteArgs<ExtArgs>>
+    ): Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one DestinationImage.
+     * @param {DestinationImageUpdateArgs} args - Arguments to update one DestinationImage.
+     * @example
+     * // Update one DestinationImage
+     * const destinationImage = await prisma.destinationImage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends DestinationImageUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationImageUpdateArgs<ExtArgs>>
+    ): Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more DestinationImages.
+     * @param {DestinationImageDeleteManyArgs} args - Arguments to filter DestinationImages to delete.
+     * @example
+     * // Delete a few DestinationImages
+     * const { count } = await prisma.destinationImage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends DestinationImageDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, DestinationImageDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DestinationImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationImageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DestinationImages
+     * const destinationImage = await prisma.destinationImage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends DestinationImageUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationImageUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one DestinationImage.
+     * @param {DestinationImageUpsertArgs} args - Arguments to update or create a DestinationImage.
+     * @example
+     * // Update or create a DestinationImage
+     * const destinationImage = await prisma.destinationImage.upsert({
+     *   create: {
+     *     // ... data to create a DestinationImage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DestinationImage we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends DestinationImageUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, DestinationImageUpsertArgs<ExtArgs>>
+    ): Prisma__DestinationImageClient<$Types.GetResult<DestinationImagePayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of DestinationImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationImageCountArgs} args - Arguments to filter DestinationImages to count.
+     * @example
+     * // Count the number of DestinationImages
+     * const count = await prisma.destinationImage.count({
+     *   where: {
+     *     // ... the filter for the DestinationImages we want to count
+     *   }
+     * })
+    **/
+    count<T extends DestinationImageCountArgs>(
+      args?: Subset<T, DestinationImageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DestinationImageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DestinationImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationImageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DestinationImageAggregateArgs>(args: Subset<T, DestinationImageAggregateArgs>): Prisma.PrismaPromise<GetDestinationImageAggregateType<T>>
+
+    /**
+     * Group by DestinationImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DestinationImageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DestinationImageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DestinationImageGroupByArgs['orderBy'] }
+        : { orderBy?: DestinationImageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DestinationImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDestinationImageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DestinationImage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__DestinationImageClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    destination<T extends DestinationArgs<ExtArgs> = {}>(args?: Subset<T, DestinationArgs<ExtArgs>>): Prisma__DestinationClient<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * DestinationImage base type for findUnique actions
+   */
+  export type DestinationImageFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * Filter, which DestinationImage to fetch.
+     */
+    where: DestinationImageWhereUniqueInput
+  }
+
+  /**
+   * DestinationImage findUnique
+   */
+  export interface DestinationImageFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends DestinationImageFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * DestinationImage findUniqueOrThrow
+   */
+  export type DestinationImageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * Filter, which DestinationImage to fetch.
+     */
+    where: DestinationImageWhereUniqueInput
+  }
+
+
+  /**
+   * DestinationImage base type for findFirst actions
+   */
+  export type DestinationImageFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * Filter, which DestinationImage to fetch.
+     */
+    where?: DestinationImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DestinationImages to fetch.
+     */
+    orderBy?: Enumerable<DestinationImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DestinationImages.
+     */
+    cursor?: DestinationImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DestinationImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DestinationImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DestinationImages.
+     */
+    distinct?: Enumerable<DestinationImageScalarFieldEnum>
+  }
+
+  /**
+   * DestinationImage findFirst
+   */
+  export interface DestinationImageFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends DestinationImageFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * DestinationImage findFirstOrThrow
+   */
+  export type DestinationImageFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * Filter, which DestinationImage to fetch.
+     */
+    where?: DestinationImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DestinationImages to fetch.
+     */
+    orderBy?: Enumerable<DestinationImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DestinationImages.
+     */
+    cursor?: DestinationImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DestinationImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DestinationImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DestinationImages.
+     */
+    distinct?: Enumerable<DestinationImageScalarFieldEnum>
+  }
+
+
+  /**
+   * DestinationImage findMany
+   */
+  export type DestinationImageFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * Filter, which DestinationImages to fetch.
+     */
+    where?: DestinationImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DestinationImages to fetch.
+     */
+    orderBy?: Enumerable<DestinationImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DestinationImages.
+     */
+    cursor?: DestinationImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DestinationImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DestinationImages.
+     */
+    skip?: number
+    distinct?: Enumerable<DestinationImageScalarFieldEnum>
+  }
+
+
+  /**
+   * DestinationImage create
+   */
+  export type DestinationImageCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DestinationImage.
+     */
+    data: XOR<DestinationImageCreateInput, DestinationImageUncheckedCreateInput>
+  }
+
+
+  /**
+   * DestinationImage createMany
+   */
+  export type DestinationImageCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DestinationImages.
+     */
+    data: Enumerable<DestinationImageCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * DestinationImage update
+   */
+  export type DestinationImageUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DestinationImage.
+     */
+    data: XOR<DestinationImageUpdateInput, DestinationImageUncheckedUpdateInput>
+    /**
+     * Choose, which DestinationImage to update.
+     */
+    where: DestinationImageWhereUniqueInput
+  }
+
+
+  /**
+   * DestinationImage updateMany
+   */
+  export type DestinationImageUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DestinationImages.
+     */
+    data: XOR<DestinationImageUpdateManyMutationInput, DestinationImageUncheckedUpdateManyInput>
+    /**
+     * Filter which DestinationImages to update
+     */
+    where?: DestinationImageWhereInput
+  }
+
+
+  /**
+   * DestinationImage upsert
+   */
+  export type DestinationImageUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DestinationImage to update in case it exists.
+     */
+    where: DestinationImageWhereUniqueInput
+    /**
+     * In case the DestinationImage found by the `where` argument doesn't exist, create a new DestinationImage with this data.
+     */
+    create: XOR<DestinationImageCreateInput, DestinationImageUncheckedCreateInput>
+    /**
+     * In case the DestinationImage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DestinationImageUpdateInput, DestinationImageUncheckedUpdateInput>
+  }
+
+
+  /**
+   * DestinationImage delete
+   */
+  export type DestinationImageDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+    /**
+     * Filter which DestinationImage to delete.
+     */
+    where: DestinationImageWhereUniqueInput
+  }
+
+
+  /**
+   * DestinationImage deleteMany
+   */
+  export type DestinationImageDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DestinationImages to delete
+     */
+    where?: DestinationImageWhereInput
+  }
+
+
+  /**
+   * DestinationImage without action
+   */
+  export type DestinationImageArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DestinationImage
+     */
+    select?: DestinationImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DestinationImageInclude<ExtArgs> | null
+  }
+
+
+
+  /**
+   * Model AttractionImage
+   */
+
+
+  export type AggregateAttractionImage = {
+    _count: AttractionImageCountAggregateOutputType | null
+    _avg: AttractionImageAvgAggregateOutputType | null
+    _sum: AttractionImageSumAggregateOutputType | null
+    _min: AttractionImageMinAggregateOutputType | null
+    _max: AttractionImageMaxAggregateOutputType | null
+  }
+
+  export type AttractionImageAvgAggregateOutputType = {
+    attractionId: number | null
+  }
+
+  export type AttractionImageSumAggregateOutputType = {
+    attractionId: number | null
+  }
+
+  export type AttractionImageMinAggregateOutputType = {
+    id: string | null
+    url: string | null
+    attractionId: number | null
+  }
+
+  export type AttractionImageMaxAggregateOutputType = {
+    id: string | null
+    url: string | null
+    attractionId: number | null
+  }
+
+  export type AttractionImageCountAggregateOutputType = {
+    id: number
+    url: number
+    attractionId: number
+    _all: number
+  }
+
+
+  export type AttractionImageAvgAggregateInputType = {
+    attractionId?: true
+  }
+
+  export type AttractionImageSumAggregateInputType = {
+    attractionId?: true
+  }
+
+  export type AttractionImageMinAggregateInputType = {
+    id?: true
+    url?: true
+    attractionId?: true
+  }
+
+  export type AttractionImageMaxAggregateInputType = {
+    id?: true
+    url?: true
+    attractionId?: true
+  }
+
+  export type AttractionImageCountAggregateInputType = {
+    id?: true
+    url?: true
+    attractionId?: true
+    _all?: true
+  }
+
+  export type AttractionImageAggregateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttractionImage to aggregate.
+     */
+    where?: AttractionImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttractionImages to fetch.
+     */
+    orderBy?: Enumerable<AttractionImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttractionImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttractionImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttractionImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AttractionImages
+    **/
+    _count?: true | AttractionImageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AttractionImageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AttractionImageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttractionImageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttractionImageMaxAggregateInputType
+  }
+
+  export type GetAttractionImageAggregateType<T extends AttractionImageAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttractionImage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttractionImage[P]>
+      : GetScalarType<T[P], AggregateAttractionImage[P]>
+  }
+
+
+
+
+  export type AttractionImageGroupByArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    where?: AttractionImageWhereInput
+    orderBy?: Enumerable<AttractionImageOrderByWithAggregationInput>
+    by: AttractionImageScalarFieldEnum[]
+    having?: AttractionImageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttractionImageCountAggregateInputType | true
+    _avg?: AttractionImageAvgAggregateInputType
+    _sum?: AttractionImageSumAggregateInputType
+    _min?: AttractionImageMinAggregateInputType
+    _max?: AttractionImageMaxAggregateInputType
+  }
+
+
+  export type AttractionImageGroupByOutputType = {
+    id: string
+    url: string
+    attractionId: number
+    _count: AttractionImageCountAggregateOutputType | null
+    _avg: AttractionImageAvgAggregateOutputType | null
+    _sum: AttractionImageSumAggregateOutputType | null
+    _min: AttractionImageMinAggregateOutputType | null
+    _max: AttractionImageMaxAggregateOutputType | null
+  }
+
+  type GetAttractionImageGroupByPayload<T extends AttractionImageGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickArray<AttractionImageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttractionImageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttractionImageGroupByOutputType[P]>
+            : GetScalarType<T[P], AttractionImageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttractionImageSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    url?: boolean
+    attractionId?: boolean
+    attraction?: boolean | AttractionArgs<ExtArgs>
+  }, ExtArgs["result"]["attractionImage"]>
+
+  export type AttractionImageSelectScalar = {
+    id?: boolean
+    url?: boolean
+    attractionId?: boolean
+  }
+
+  export type AttractionImageInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    attraction?: boolean | AttractionArgs<ExtArgs>
+  }
+
+
+  type AttractionImageGetPayload<S extends boolean | null | undefined | AttractionImageArgs> = $Types.GetResult<AttractionImagePayload, S>
+
+  type AttractionImageCountArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = 
+    Omit<AttractionImageFindManyArgs, 'select' | 'include'> & {
+      select?: AttractionImageCountAggregateInputType | true
+    }
+
+  export interface AttractionImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AttractionImage'], meta: { name: 'AttractionImage' } }
+    /**
+     * Find zero or one AttractionImage that matches the filter.
+     * @param {AttractionImageFindUniqueArgs} args - Arguments to find a AttractionImage
+     * @example
+     * // Get one AttractionImage
+     * const attractionImage = await prisma.attractionImage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends AttractionImageFindUniqueArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, AttractionImageFindUniqueArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'AttractionImage'> extends True ? Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findUnique', never>, never, ExtArgs> : Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findUnique', never> | null, null, ExtArgs>
+
+    /**
+     * Find one AttractionImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {AttractionImageFindUniqueOrThrowArgs} args - Arguments to find a AttractionImage
+     * @example
+     * // Get one AttractionImage
+     * const attractionImage = await prisma.attractionImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends AttractionImageFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionImageFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findUniqueOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find the first AttractionImage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionImageFindFirstArgs} args - Arguments to find a AttractionImage
+     * @example
+     * // Get one AttractionImage
+     * const attractionImage = await prisma.attractionImage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends AttractionImageFindFirstArgs<ExtArgs>, LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, AttractionImageFindFirstArgs<ExtArgs>>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'AttractionImage'> extends True ? Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findFirst', never>, never, ExtArgs> : Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findFirst', never> | null, null, ExtArgs>
+
+    /**
+     * Find the first AttractionImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionImageFindFirstOrThrowArgs} args - Arguments to find a AttractionImage
+     * @example
+     * // Get one AttractionImage
+     * const attractionImage = await prisma.attractionImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends AttractionImageFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionImageFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findFirstOrThrow', never>, never, ExtArgs>
+
+    /**
+     * Find zero or more AttractionImages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionImageFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AttractionImages
+     * const attractionImages = await prisma.attractionImage.findMany()
+     * 
+     * // Get first 10 AttractionImages
+     * const attractionImages = await prisma.attractionImage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attractionImageWithIdOnly = await prisma.attractionImage.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends AttractionImageFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionImageFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'findMany', never>>
+
+    /**
+     * Create a AttractionImage.
+     * @param {AttractionImageCreateArgs} args - Arguments to create a AttractionImage.
+     * @example
+     * // Create one AttractionImage
+     * const AttractionImage = await prisma.attractionImage.create({
+     *   data: {
+     *     // ... data to create a AttractionImage
+     *   }
+     * })
+     * 
+    **/
+    create<T extends AttractionImageCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionImageCreateArgs<ExtArgs>>
+    ): Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'create', never>, never, ExtArgs>
+
+    /**
+     * Create many AttractionImages.
+     *     @param {AttractionImageCreateManyArgs} args - Arguments to create many AttractionImages.
+     *     @example
+     *     // Create many AttractionImages
+     *     const attractionImage = await prisma.attractionImage.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends AttractionImageCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionImageCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a AttractionImage.
+     * @param {AttractionImageDeleteArgs} args - Arguments to delete one AttractionImage.
+     * @example
+     * // Delete one AttractionImage
+     * const AttractionImage = await prisma.attractionImage.delete({
+     *   where: {
+     *     // ... filter to delete one AttractionImage
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends AttractionImageDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionImageDeleteArgs<ExtArgs>>
+    ): Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'delete', never>, never, ExtArgs>
+
+    /**
+     * Update one AttractionImage.
+     * @param {AttractionImageUpdateArgs} args - Arguments to update one AttractionImage.
+     * @example
+     * // Update one AttractionImage
+     * const attractionImage = await prisma.attractionImage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends AttractionImageUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionImageUpdateArgs<ExtArgs>>
+    ): Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'update', never>, never, ExtArgs>
+
+    /**
+     * Delete zero or more AttractionImages.
+     * @param {AttractionImageDeleteManyArgs} args - Arguments to filter AttractionImages to delete.
+     * @example
+     * // Delete a few AttractionImages
+     * const { count } = await prisma.attractionImage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends AttractionImageDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, AttractionImageDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AttractionImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionImageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AttractionImages
+     * const attractionImage = await prisma.attractionImage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends AttractionImageUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionImageUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one AttractionImage.
+     * @param {AttractionImageUpsertArgs} args - Arguments to update or create a AttractionImage.
+     * @example
+     * // Update or create a AttractionImage
+     * const attractionImage = await prisma.attractionImage.upsert({
+     *   create: {
+     *     // ... data to create a AttractionImage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AttractionImage we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends AttractionImageUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, AttractionImageUpsertArgs<ExtArgs>>
+    ): Prisma__AttractionImageClient<$Types.GetResult<AttractionImagePayload<ExtArgs>, T, 'upsert', never>, never, ExtArgs>
+
+    /**
+     * Count the number of AttractionImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionImageCountArgs} args - Arguments to filter AttractionImages to count.
+     * @example
+     * // Count the number of AttractionImages
+     * const count = await prisma.attractionImage.count({
+     *   where: {
+     *     // ... the filter for the AttractionImages we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttractionImageCountArgs>(
+      args?: Subset<T, AttractionImageCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttractionImageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AttractionImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionImageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttractionImageAggregateArgs>(args: Subset<T, AttractionImageAggregateArgs>): Prisma.PrismaPromise<GetAttractionImageAggregateType<T>>
+
+    /**
+     * Group by AttractionImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttractionImageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttractionImageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttractionImageGroupByArgs['orderBy'] }
+        : { orderBy?: AttractionImageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttractionImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttractionImageGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AttractionImage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__AttractionImageClient<T, Null = never, ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> implements Prisma.PrismaPromise<T> {
+    private readonly _dmmf;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+
+    attraction<T extends AttractionArgs<ExtArgs> = {}>(args?: Subset<T, AttractionArgs<ExtArgs>>): Prisma__AttractionClient<$Types.GetResult<AttractionPayload<ExtArgs>, T, 'findUnique', never> | Null, never, ExtArgs>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * AttractionImage base type for findUnique actions
+   */
+  export type AttractionImageFindUniqueArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * Filter, which AttractionImage to fetch.
+     */
+    where: AttractionImageWhereUniqueInput
+  }
+
+  /**
+   * AttractionImage findUnique
+   */
+  export interface AttractionImageFindUniqueArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends AttractionImageFindUniqueArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * AttractionImage findUniqueOrThrow
+   */
+  export type AttractionImageFindUniqueOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * Filter, which AttractionImage to fetch.
+     */
+    where: AttractionImageWhereUniqueInput
+  }
+
+
+  /**
+   * AttractionImage base type for findFirst actions
+   */
+  export type AttractionImageFindFirstArgsBase<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * Filter, which AttractionImage to fetch.
+     */
+    where?: AttractionImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttractionImages to fetch.
+     */
+    orderBy?: Enumerable<AttractionImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttractionImages.
+     */
+    cursor?: AttractionImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttractionImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttractionImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttractionImages.
+     */
+    distinct?: Enumerable<AttractionImageScalarFieldEnum>
+  }
+
+  /**
+   * AttractionImage findFirst
+   */
+  export interface AttractionImageFindFirstArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> extends AttractionImageFindFirstArgsBase<ExtArgs> {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * AttractionImage findFirstOrThrow
+   */
+  export type AttractionImageFindFirstOrThrowArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * Filter, which AttractionImage to fetch.
+     */
+    where?: AttractionImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttractionImages to fetch.
+     */
+    orderBy?: Enumerable<AttractionImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttractionImages.
+     */
+    cursor?: AttractionImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttractionImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttractionImages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttractionImages.
+     */
+    distinct?: Enumerable<AttractionImageScalarFieldEnum>
+  }
+
+
+  /**
+   * AttractionImage findMany
+   */
+  export type AttractionImageFindManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * Filter, which AttractionImages to fetch.
+     */
+    where?: AttractionImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttractionImages to fetch.
+     */
+    orderBy?: Enumerable<AttractionImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AttractionImages.
+     */
+    cursor?: AttractionImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttractionImages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttractionImages.
+     */
+    skip?: number
+    distinct?: Enumerable<AttractionImageScalarFieldEnum>
+  }
+
+
+  /**
+   * AttractionImage create
+   */
+  export type AttractionImageCreateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AttractionImage.
+     */
+    data: XOR<AttractionImageCreateInput, AttractionImageUncheckedCreateInput>
+  }
+
+
+  /**
+   * AttractionImage createMany
+   */
+  export type AttractionImageCreateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AttractionImages.
+     */
+    data: Enumerable<AttractionImageCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * AttractionImage update
+   */
+  export type AttractionImageUpdateArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AttractionImage.
+     */
+    data: XOR<AttractionImageUpdateInput, AttractionImageUncheckedUpdateInput>
+    /**
+     * Choose, which AttractionImage to update.
+     */
+    where: AttractionImageWhereUniqueInput
+  }
+
+
+  /**
+   * AttractionImage updateMany
+   */
+  export type AttractionImageUpdateManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AttractionImages.
+     */
+    data: XOR<AttractionImageUpdateManyMutationInput, AttractionImageUncheckedUpdateManyInput>
+    /**
+     * Filter which AttractionImages to update
+     */
+    where?: AttractionImageWhereInput
+  }
+
+
+  /**
+   * AttractionImage upsert
+   */
+  export type AttractionImageUpsertArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AttractionImage to update in case it exists.
+     */
+    where: AttractionImageWhereUniqueInput
+    /**
+     * In case the AttractionImage found by the `where` argument doesn't exist, create a new AttractionImage with this data.
+     */
+    create: XOR<AttractionImageCreateInput, AttractionImageUncheckedCreateInput>
+    /**
+     * In case the AttractionImage was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttractionImageUpdateInput, AttractionImageUncheckedUpdateInput>
+  }
+
+
+  /**
+   * AttractionImage delete
+   */
+  export type AttractionImageDeleteArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
+    /**
+     * Filter which AttractionImage to delete.
+     */
+    where: AttractionImageWhereUniqueInput
+  }
+
+
+  /**
+   * AttractionImage deleteMany
+   */
+  export type AttractionImageDeleteManyArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttractionImages to delete
+     */
+    where?: AttractionImageWhereInput
+  }
+
+
+  /**
+   * AttractionImage without action
+   */
+  export type AttractionImageArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttractionImage
+     */
+    select?: AttractionImageSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: AttractionImageInclude<ExtArgs> | null
   }
 
 
@@ -1837,13 +6350,54 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-  export const LocationScalarFieldEnum: {
+  export const CountryScalarFieldEnum: {
     id: 'id',
-    name: 'name',
-    description: 'description'
+    code: 'code',
+    name: 'name'
   };
 
-  export type LocationScalarFieldEnum = (typeof LocationScalarFieldEnum)[keyof typeof LocationScalarFieldEnum]
+  export type CountryScalarFieldEnum = (typeof CountryScalarFieldEnum)[keyof typeof CountryScalarFieldEnum]
+
+
+  export const DestinationScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    region: 'region',
+    countryId: 'countryId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DestinationScalarFieldEnum = (typeof DestinationScalarFieldEnum)[keyof typeof DestinationScalarFieldEnum]
+
+
+  export const AttractionScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    destinationId: 'destinationId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AttractionScalarFieldEnum = (typeof AttractionScalarFieldEnum)[keyof typeof AttractionScalarFieldEnum]
+
+
+  export const DestinationImageScalarFieldEnum: {
+    id: 'id',
+    url: 'url',
+    destinationId: 'destinationId'
+  };
+
+  export type DestinationImageScalarFieldEnum = (typeof DestinationImageScalarFieldEnum)[keyof typeof DestinationImageScalarFieldEnum]
+
+
+  export const AttractionImageScalarFieldEnum: {
+    id: 'id',
+    url: 'url',
+    attractionId: 'attractionId'
+  };
+
+  export type AttractionImageScalarFieldEnum = (typeof AttractionImageScalarFieldEnum)[keyof typeof AttractionImageScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -1862,95 +6416,491 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
   /**
    * Deep Input Types
    */
 
 
-  export type LocationWhereInput = {
-    AND?: Enumerable<LocationWhereInput>
-    OR?: Enumerable<LocationWhereInput>
-    NOT?: Enumerable<LocationWhereInput>
+  export type CountryWhereInput = {
+    AND?: Enumerable<CountryWhereInput>
+    OR?: Enumerable<CountryWhereInput>
+    NOT?: Enumerable<CountryWhereInput>
+    id?: IntFilter | number
+    code?: StringFilter | string
+    name?: StringFilter | string
+    destinations?: DestinationListRelationFilter
+  }
+
+  export type CountryOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    destinations?: DestinationOrderByRelationAggregateInput
+  }
+
+  export type CountryWhereUniqueInput = {
+    id?: number
+    code?: string
+  }
+
+  export type CountryOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    _count?: CountryCountOrderByAggregateInput
+    _avg?: CountryAvgOrderByAggregateInput
+    _max?: CountryMaxOrderByAggregateInput
+    _min?: CountryMinOrderByAggregateInput
+    _sum?: CountrySumOrderByAggregateInput
+  }
+
+  export type CountryScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CountryScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CountryScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CountryScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    code?: StringWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+  }
+
+  export type DestinationWhereInput = {
+    AND?: Enumerable<DestinationWhereInput>
+    OR?: Enumerable<DestinationWhereInput>
+    NOT?: Enumerable<DestinationWhereInput>
     id?: IntFilter | number
     name?: StringFilter | string
-    description?: StringNullableFilter | string | null
+    region?: StringFilter | string
+    countryId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    attractions?: AttractionListRelationFilter
+    country?: XOR<CountryRelationFilter, CountryWhereInput>
+    images?: DestinationImageListRelationFilter
   }
 
-  export type LocationOrderByWithRelationInput = {
+  export type DestinationOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrderInput | SortOrder
+    region?: SortOrder
+    countryId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    attractions?: AttractionOrderByRelationAggregateInput
+    country?: CountryOrderByWithRelationInput
+    images?: DestinationImageOrderByRelationAggregateInput
   }
 
-  export type LocationWhereUniqueInput = {
+  export type DestinationWhereUniqueInput = {
     id?: number
+    name?: string
   }
 
-  export type LocationOrderByWithAggregationInput = {
+  export type DestinationOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrderInput | SortOrder
-    _count?: LocationCountOrderByAggregateInput
-    _avg?: LocationAvgOrderByAggregateInput
-    _max?: LocationMaxOrderByAggregateInput
-    _min?: LocationMinOrderByAggregateInput
-    _sum?: LocationSumOrderByAggregateInput
+    region?: SortOrder
+    countryId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DestinationCountOrderByAggregateInput
+    _avg?: DestinationAvgOrderByAggregateInput
+    _max?: DestinationMaxOrderByAggregateInput
+    _min?: DestinationMinOrderByAggregateInput
+    _sum?: DestinationSumOrderByAggregateInput
   }
 
-  export type LocationScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<LocationScalarWhereWithAggregatesInput>
-    OR?: Enumerable<LocationScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<LocationScalarWhereWithAggregatesInput>
+  export type DestinationScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<DestinationScalarWhereWithAggregatesInput>
+    OR?: Enumerable<DestinationScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<DestinationScalarWhereWithAggregatesInput>
     id?: IntWithAggregatesFilter | number
     name?: StringWithAggregatesFilter | string
-    description?: StringNullableWithAggregatesFilter | string | null
+    region?: StringWithAggregatesFilter | string
+    countryId?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
-  export type LocationCreateInput = {
+  export type AttractionWhereInput = {
+    AND?: Enumerable<AttractionWhereInput>
+    OR?: Enumerable<AttractionWhereInput>
+    NOT?: Enumerable<AttractionWhereInput>
+    id?: IntFilter | number
+    name?: StringFilter | string
+    destinationId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    destination?: XOR<DestinationRelationFilter, DestinationWhereInput>
+    images?: AttractionImageListRelationFilter
+  }
+
+  export type AttractionOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    destinationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    destination?: DestinationOrderByWithRelationInput
+    images?: AttractionImageOrderByRelationAggregateInput
+  }
+
+  export type AttractionWhereUniqueInput = {
+    id?: number
+    name?: string
+  }
+
+  export type AttractionOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    destinationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AttractionCountOrderByAggregateInput
+    _avg?: AttractionAvgOrderByAggregateInput
+    _max?: AttractionMaxOrderByAggregateInput
+    _min?: AttractionMinOrderByAggregateInput
+    _sum?: AttractionSumOrderByAggregateInput
+  }
+
+  export type AttractionScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<AttractionScalarWhereWithAggregatesInput>
+    OR?: Enumerable<AttractionScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<AttractionScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    name?: StringWithAggregatesFilter | string
+    destinationId?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
+  }
+
+  export type DestinationImageWhereInput = {
+    AND?: Enumerable<DestinationImageWhereInput>
+    OR?: Enumerable<DestinationImageWhereInput>
+    NOT?: Enumerable<DestinationImageWhereInput>
+    id?: StringFilter | string
+    url?: StringFilter | string
+    destinationId?: IntFilter | number
+    destination?: XOR<DestinationRelationFilter, DestinationWhereInput>
+  }
+
+  export type DestinationImageOrderByWithRelationInput = {
+    id?: SortOrder
+    url?: SortOrder
+    destinationId?: SortOrder
+    destination?: DestinationOrderByWithRelationInput
+  }
+
+  export type DestinationImageWhereUniqueInput = {
+    id?: string
+  }
+
+  export type DestinationImageOrderByWithAggregationInput = {
+    id?: SortOrder
+    url?: SortOrder
+    destinationId?: SortOrder
+    _count?: DestinationImageCountOrderByAggregateInput
+    _avg?: DestinationImageAvgOrderByAggregateInput
+    _max?: DestinationImageMaxOrderByAggregateInput
+    _min?: DestinationImageMinOrderByAggregateInput
+    _sum?: DestinationImageSumOrderByAggregateInput
+  }
+
+  export type DestinationImageScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<DestinationImageScalarWhereWithAggregatesInput>
+    OR?: Enumerable<DestinationImageScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<DestinationImageScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    url?: StringWithAggregatesFilter | string
+    destinationId?: IntWithAggregatesFilter | number
+  }
+
+  export type AttractionImageWhereInput = {
+    AND?: Enumerable<AttractionImageWhereInput>
+    OR?: Enumerable<AttractionImageWhereInput>
+    NOT?: Enumerable<AttractionImageWhereInput>
+    id?: StringFilter | string
+    url?: StringFilter | string
+    attractionId?: IntFilter | number
+    attraction?: XOR<AttractionRelationFilter, AttractionWhereInput>
+  }
+
+  export type AttractionImageOrderByWithRelationInput = {
+    id?: SortOrder
+    url?: SortOrder
+    attractionId?: SortOrder
+    attraction?: AttractionOrderByWithRelationInput
+  }
+
+  export type AttractionImageWhereUniqueInput = {
+    id?: string
+  }
+
+  export type AttractionImageOrderByWithAggregationInput = {
+    id?: SortOrder
+    url?: SortOrder
+    attractionId?: SortOrder
+    _count?: AttractionImageCountOrderByAggregateInput
+    _avg?: AttractionImageAvgOrderByAggregateInput
+    _max?: AttractionImageMaxOrderByAggregateInput
+    _min?: AttractionImageMinOrderByAggregateInput
+    _sum?: AttractionImageSumOrderByAggregateInput
+  }
+
+  export type AttractionImageScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<AttractionImageScalarWhereWithAggregatesInput>
+    OR?: Enumerable<AttractionImageScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<AttractionImageScalarWhereWithAggregatesInput>
+    id?: StringWithAggregatesFilter | string
+    url?: StringWithAggregatesFilter | string
+    attractionId?: IntWithAggregatesFilter | number
+  }
+
+  export type CountryCreateInput = {
+    code: string
     name: string
-    description?: string | null
+    destinations?: DestinationCreateNestedManyWithoutCountryInput
   }
 
-  export type LocationUncheckedCreateInput = {
+  export type CountryUncheckedCreateInput = {
+    id?: number
+    code: string
+    name: string
+    destinations?: DestinationUncheckedCreateNestedManyWithoutCountryInput
+  }
+
+  export type CountryUpdateInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    destinations?: DestinationUpdateManyWithoutCountryNestedInput
+  }
+
+  export type CountryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    destinations?: DestinationUncheckedUpdateManyWithoutCountryNestedInput
+  }
+
+  export type CountryCreateManyInput = {
+    id?: number
+    code: string
+    name: string
+  }
+
+  export type CountryUpdateManyMutationInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CountryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DestinationCreateInput = {
+    name: string
+    region: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attractions?: AttractionCreateNestedManyWithoutDestinationInput
+    country: CountryCreateNestedOneWithoutDestinationsInput
+    images?: DestinationImageCreateNestedManyWithoutDestinationInput
+  }
+
+  export type DestinationUncheckedCreateInput = {
     id?: number
     name: string
-    description?: string | null
+    region: string
+    countryId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attractions?: AttractionUncheckedCreateNestedManyWithoutDestinationInput
+    images?: DestinationImageUncheckedCreateNestedManyWithoutDestinationInput
   }
 
-  export type LocationUpdateInput = {
+  export type DestinationUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attractions?: AttractionUpdateManyWithoutDestinationNestedInput
+    country?: CountryUpdateOneRequiredWithoutDestinationsNestedInput
+    images?: DestinationImageUpdateManyWithoutDestinationNestedInput
   }
 
-  export type LocationUncheckedUpdateInput = {
+  export type DestinationUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: StringFieldUpdateOperationsInput | string
+    countryId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attractions?: AttractionUncheckedUpdateManyWithoutDestinationNestedInput
+    images?: DestinationImageUncheckedUpdateManyWithoutDestinationNestedInput
   }
 
-  export type LocationCreateManyInput = {
+  export type DestinationCreateManyInput = {
     id?: number
     name: string
-    description?: string | null
+    region: string
+    countryId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type LocationUpdateManyMutationInput = {
+  export type DestinationUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type LocationUncheckedUpdateManyInput = {
+  export type DestinationUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
+    region?: StringFieldUpdateOperationsInput | string
+    countryId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttractionCreateInput = {
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    destination: DestinationCreateNestedOneWithoutAttractionsInput
+    images?: AttractionImageCreateNestedManyWithoutAttractionInput
+  }
+
+  export type AttractionUncheckedCreateInput = {
+    id?: number
+    name: string
+    destinationId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    images?: AttractionImageUncheckedCreateNestedManyWithoutAttractionInput
+  }
+
+  export type AttractionUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    destination?: DestinationUpdateOneRequiredWithoutAttractionsNestedInput
+    images?: AttractionImageUpdateManyWithoutAttractionNestedInput
+  }
+
+  export type AttractionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    destinationId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    images?: AttractionImageUncheckedUpdateManyWithoutAttractionNestedInput
+  }
+
+  export type AttractionCreateManyInput = {
+    id?: number
+    name: string
+    destinationId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttractionUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttractionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    destinationId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DestinationImageCreateInput = {
+    id?: string
+    url: string
+    destination: DestinationCreateNestedOneWithoutImagesInput
+  }
+
+  export type DestinationImageUncheckedCreateInput = {
+    id?: string
+    url: string
+    destinationId: number
+  }
+
+  export type DestinationImageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    destination?: DestinationUpdateOneRequiredWithoutImagesNestedInput
+  }
+
+  export type DestinationImageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    destinationId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type DestinationImageCreateManyInput = {
+    id?: string
+    url: string
+    destinationId: number
+  }
+
+  export type DestinationImageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DestinationImageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    destinationId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type AttractionImageCreateInput = {
+    id?: string
+    url: string
+    attraction: AttractionCreateNestedOneWithoutImagesInput
+  }
+
+  export type AttractionImageUncheckedCreateInput = {
+    id?: string
+    url: string
+    attractionId: number
+  }
+
+  export type AttractionImageUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    attraction?: AttractionUpdateOneRequiredWithoutImagesNestedInput
+  }
+
+  export type AttractionImageUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    attractionId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type AttractionImageCreateManyInput = {
+    id?: string
+    url: string
+    attractionId: number
+  }
+
+  export type AttractionImageUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttractionImageUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    attractionId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter = {
@@ -1979,49 +6929,39 @@ export namespace Prisma {
     not?: NestedStringFilter | string
   }
 
-  export type StringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | string | null
-    notIn?: Enumerable<string> | string | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableFilter | string | null
+  export type DestinationListRelationFilter = {
+    every?: DestinationWhereInput
+    some?: DestinationWhereInput
+    none?: DestinationWhereInput
   }
 
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
+  export type DestinationOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
-  export type LocationCountOrderByAggregateInput = {
+  export type CountryCountOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
-    description?: SortOrder
   }
 
-  export type LocationAvgOrderByAggregateInput = {
+  export type CountryAvgOrderByAggregateInput = {
     id?: SortOrder
   }
 
-  export type LocationMaxOrderByAggregateInput = {
+  export type CountryMaxOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
-    description?: SortOrder
   }
 
-  export type LocationMinOrderByAggregateInput = {
+  export type CountryMinOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
-    description?: SortOrder
   }
 
-  export type LocationSumOrderByAggregateInput = {
+  export type CountrySumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -2059,30 +6999,229 @@ export namespace Prisma {
     _max?: NestedStringFilter
   }
 
-  export type StringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | string | null
-    notIn?: Enumerable<string> | string | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
+  export type DateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
+  }
+
+  export type AttractionListRelationFilter = {
+    every?: AttractionWhereInput
+    some?: AttractionWhereInput
+    none?: AttractionWhereInput
+  }
+
+  export type CountryRelationFilter = {
+    is?: CountryWhereInput | null
+    isNot?: CountryWhereInput | null
+  }
+
+  export type DestinationImageListRelationFilter = {
+    every?: DestinationImageWhereInput
+    some?: DestinationImageWhereInput
+    none?: DestinationImageWhereInput
+  }
+
+  export type AttractionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DestinationImageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DestinationCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    region?: SortOrder
+    countryId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DestinationAvgOrderByAggregateInput = {
+    id?: SortOrder
+    countryId?: SortOrder
+  }
+
+  export type DestinationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    region?: SortOrder
+    countryId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DestinationMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    region?: SortOrder
+    countryId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DestinationSumOrderByAggregateInput = {
+    id?: SortOrder
+    countryId?: SortOrder
+  }
+
+  export type DateTimeWithAggregatesFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeWithAggregatesFilter | Date | string
+    _count?: NestedIntFilter
+    _min?: NestedDateTimeFilter
+    _max?: NestedDateTimeFilter
+  }
+
+  export type DestinationRelationFilter = {
+    is?: DestinationWhereInput | null
+    isNot?: DestinationWhereInput | null
+  }
+
+  export type AttractionImageListRelationFilter = {
+    every?: AttractionImageWhereInput
+    some?: AttractionImageWhereInput
+    none?: AttractionImageWhereInput
+  }
+
+  export type AttractionImageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttractionCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    destinationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttractionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    destinationId?: SortOrder
+  }
+
+  export type AttractionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    destinationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttractionMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    destinationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttractionSumOrderByAggregateInput = {
+    id?: SortOrder
+    destinationId?: SortOrder
+  }
+
+  export type DestinationImageCountOrderByAggregateInput = {
+    id?: SortOrder
+    url?: SortOrder
+    destinationId?: SortOrder
+  }
+
+  export type DestinationImageAvgOrderByAggregateInput = {
+    destinationId?: SortOrder
+  }
+
+  export type DestinationImageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    url?: SortOrder
+    destinationId?: SortOrder
+  }
+
+  export type DestinationImageMinOrderByAggregateInput = {
+    id?: SortOrder
+    url?: SortOrder
+    destinationId?: SortOrder
+  }
+
+  export type DestinationImageSumOrderByAggregateInput = {
+    destinationId?: SortOrder
+  }
+
+  export type AttractionRelationFilter = {
+    is?: AttractionWhereInput | null
+    isNot?: AttractionWhereInput | null
+  }
+
+  export type AttractionImageCountOrderByAggregateInput = {
+    id?: SortOrder
+    url?: SortOrder
+    attractionId?: SortOrder
+  }
+
+  export type AttractionImageAvgOrderByAggregateInput = {
+    attractionId?: SortOrder
+  }
+
+  export type AttractionImageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    url?: SortOrder
+    attractionId?: SortOrder
+  }
+
+  export type AttractionImageMinOrderByAggregateInput = {
+    id?: SortOrder
+    url?: SortOrder
+    attractionId?: SortOrder
+  }
+
+  export type AttractionImageSumOrderByAggregateInput = {
+    attractionId?: SortOrder
+  }
+
+  export type DestinationCreateNestedManyWithoutCountryInput = {
+    create?: XOR<Enumerable<DestinationCreateWithoutCountryInput>, Enumerable<DestinationUncheckedCreateWithoutCountryInput>>
+    connectOrCreate?: Enumerable<DestinationCreateOrConnectWithoutCountryInput>
+    createMany?: DestinationCreateManyCountryInputEnvelope
+    connect?: Enumerable<DestinationWhereUniqueInput>
+  }
+
+  export type DestinationUncheckedCreateNestedManyWithoutCountryInput = {
+    create?: XOR<Enumerable<DestinationCreateWithoutCountryInput>, Enumerable<DestinationUncheckedCreateWithoutCountryInput>>
+    connectOrCreate?: Enumerable<DestinationCreateOrConnectWithoutCountryInput>
+    createMany?: DestinationCreateManyCountryInputEnvelope
+    connect?: Enumerable<DestinationWhereUniqueInput>
   }
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
+  export type DestinationUpdateManyWithoutCountryNestedInput = {
+    create?: XOR<Enumerable<DestinationCreateWithoutCountryInput>, Enumerable<DestinationUncheckedCreateWithoutCountryInput>>
+    connectOrCreate?: Enumerable<DestinationCreateOrConnectWithoutCountryInput>
+    upsert?: Enumerable<DestinationUpsertWithWhereUniqueWithoutCountryInput>
+    createMany?: DestinationCreateManyCountryInputEnvelope
+    set?: Enumerable<DestinationWhereUniqueInput>
+    disconnect?: Enumerable<DestinationWhereUniqueInput>
+    delete?: Enumerable<DestinationWhereUniqueInput>
+    connect?: Enumerable<DestinationWhereUniqueInput>
+    update?: Enumerable<DestinationUpdateWithWhereUniqueWithoutCountryInput>
+    updateMany?: Enumerable<DestinationUpdateManyWithWhereWithoutCountryInput>
+    deleteMany?: Enumerable<DestinationScalarWhereInput>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -2091,6 +7230,206 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type DestinationUncheckedUpdateManyWithoutCountryNestedInput = {
+    create?: XOR<Enumerable<DestinationCreateWithoutCountryInput>, Enumerable<DestinationUncheckedCreateWithoutCountryInput>>
+    connectOrCreate?: Enumerable<DestinationCreateOrConnectWithoutCountryInput>
+    upsert?: Enumerable<DestinationUpsertWithWhereUniqueWithoutCountryInput>
+    createMany?: DestinationCreateManyCountryInputEnvelope
+    set?: Enumerable<DestinationWhereUniqueInput>
+    disconnect?: Enumerable<DestinationWhereUniqueInput>
+    delete?: Enumerable<DestinationWhereUniqueInput>
+    connect?: Enumerable<DestinationWhereUniqueInput>
+    update?: Enumerable<DestinationUpdateWithWhereUniqueWithoutCountryInput>
+    updateMany?: Enumerable<DestinationUpdateManyWithWhereWithoutCountryInput>
+    deleteMany?: Enumerable<DestinationScalarWhereInput>
+  }
+
+  export type AttractionCreateNestedManyWithoutDestinationInput = {
+    create?: XOR<Enumerable<AttractionCreateWithoutDestinationInput>, Enumerable<AttractionUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<AttractionCreateOrConnectWithoutDestinationInput>
+    createMany?: AttractionCreateManyDestinationInputEnvelope
+    connect?: Enumerable<AttractionWhereUniqueInput>
+  }
+
+  export type CountryCreateNestedOneWithoutDestinationsInput = {
+    create?: XOR<CountryCreateWithoutDestinationsInput, CountryUncheckedCreateWithoutDestinationsInput>
+    connectOrCreate?: CountryCreateOrConnectWithoutDestinationsInput
+    connect?: CountryWhereUniqueInput
+  }
+
+  export type DestinationImageCreateNestedManyWithoutDestinationInput = {
+    create?: XOR<Enumerable<DestinationImageCreateWithoutDestinationInput>, Enumerable<DestinationImageUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<DestinationImageCreateOrConnectWithoutDestinationInput>
+    createMany?: DestinationImageCreateManyDestinationInputEnvelope
+    connect?: Enumerable<DestinationImageWhereUniqueInput>
+  }
+
+  export type AttractionUncheckedCreateNestedManyWithoutDestinationInput = {
+    create?: XOR<Enumerable<AttractionCreateWithoutDestinationInput>, Enumerable<AttractionUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<AttractionCreateOrConnectWithoutDestinationInput>
+    createMany?: AttractionCreateManyDestinationInputEnvelope
+    connect?: Enumerable<AttractionWhereUniqueInput>
+  }
+
+  export type DestinationImageUncheckedCreateNestedManyWithoutDestinationInput = {
+    create?: XOR<Enumerable<DestinationImageCreateWithoutDestinationInput>, Enumerable<DestinationImageUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<DestinationImageCreateOrConnectWithoutDestinationInput>
+    createMany?: DestinationImageCreateManyDestinationInputEnvelope
+    connect?: Enumerable<DestinationImageWhereUniqueInput>
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type AttractionUpdateManyWithoutDestinationNestedInput = {
+    create?: XOR<Enumerable<AttractionCreateWithoutDestinationInput>, Enumerable<AttractionUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<AttractionCreateOrConnectWithoutDestinationInput>
+    upsert?: Enumerable<AttractionUpsertWithWhereUniqueWithoutDestinationInput>
+    createMany?: AttractionCreateManyDestinationInputEnvelope
+    set?: Enumerable<AttractionWhereUniqueInput>
+    disconnect?: Enumerable<AttractionWhereUniqueInput>
+    delete?: Enumerable<AttractionWhereUniqueInput>
+    connect?: Enumerable<AttractionWhereUniqueInput>
+    update?: Enumerable<AttractionUpdateWithWhereUniqueWithoutDestinationInput>
+    updateMany?: Enumerable<AttractionUpdateManyWithWhereWithoutDestinationInput>
+    deleteMany?: Enumerable<AttractionScalarWhereInput>
+  }
+
+  export type CountryUpdateOneRequiredWithoutDestinationsNestedInput = {
+    create?: XOR<CountryCreateWithoutDestinationsInput, CountryUncheckedCreateWithoutDestinationsInput>
+    connectOrCreate?: CountryCreateOrConnectWithoutDestinationsInput
+    upsert?: CountryUpsertWithoutDestinationsInput
+    connect?: CountryWhereUniqueInput
+    update?: XOR<CountryUpdateWithoutDestinationsInput, CountryUncheckedUpdateWithoutDestinationsInput>
+  }
+
+  export type DestinationImageUpdateManyWithoutDestinationNestedInput = {
+    create?: XOR<Enumerable<DestinationImageCreateWithoutDestinationInput>, Enumerable<DestinationImageUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<DestinationImageCreateOrConnectWithoutDestinationInput>
+    upsert?: Enumerable<DestinationImageUpsertWithWhereUniqueWithoutDestinationInput>
+    createMany?: DestinationImageCreateManyDestinationInputEnvelope
+    set?: Enumerable<DestinationImageWhereUniqueInput>
+    disconnect?: Enumerable<DestinationImageWhereUniqueInput>
+    delete?: Enumerable<DestinationImageWhereUniqueInput>
+    connect?: Enumerable<DestinationImageWhereUniqueInput>
+    update?: Enumerable<DestinationImageUpdateWithWhereUniqueWithoutDestinationInput>
+    updateMany?: Enumerable<DestinationImageUpdateManyWithWhereWithoutDestinationInput>
+    deleteMany?: Enumerable<DestinationImageScalarWhereInput>
+  }
+
+  export type AttractionUncheckedUpdateManyWithoutDestinationNestedInput = {
+    create?: XOR<Enumerable<AttractionCreateWithoutDestinationInput>, Enumerable<AttractionUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<AttractionCreateOrConnectWithoutDestinationInput>
+    upsert?: Enumerable<AttractionUpsertWithWhereUniqueWithoutDestinationInput>
+    createMany?: AttractionCreateManyDestinationInputEnvelope
+    set?: Enumerable<AttractionWhereUniqueInput>
+    disconnect?: Enumerable<AttractionWhereUniqueInput>
+    delete?: Enumerable<AttractionWhereUniqueInput>
+    connect?: Enumerable<AttractionWhereUniqueInput>
+    update?: Enumerable<AttractionUpdateWithWhereUniqueWithoutDestinationInput>
+    updateMany?: Enumerable<AttractionUpdateManyWithWhereWithoutDestinationInput>
+    deleteMany?: Enumerable<AttractionScalarWhereInput>
+  }
+
+  export type DestinationImageUncheckedUpdateManyWithoutDestinationNestedInput = {
+    create?: XOR<Enumerable<DestinationImageCreateWithoutDestinationInput>, Enumerable<DestinationImageUncheckedCreateWithoutDestinationInput>>
+    connectOrCreate?: Enumerable<DestinationImageCreateOrConnectWithoutDestinationInput>
+    upsert?: Enumerable<DestinationImageUpsertWithWhereUniqueWithoutDestinationInput>
+    createMany?: DestinationImageCreateManyDestinationInputEnvelope
+    set?: Enumerable<DestinationImageWhereUniqueInput>
+    disconnect?: Enumerable<DestinationImageWhereUniqueInput>
+    delete?: Enumerable<DestinationImageWhereUniqueInput>
+    connect?: Enumerable<DestinationImageWhereUniqueInput>
+    update?: Enumerable<DestinationImageUpdateWithWhereUniqueWithoutDestinationInput>
+    updateMany?: Enumerable<DestinationImageUpdateManyWithWhereWithoutDestinationInput>
+    deleteMany?: Enumerable<DestinationImageScalarWhereInput>
+  }
+
+  export type DestinationCreateNestedOneWithoutAttractionsInput = {
+    create?: XOR<DestinationCreateWithoutAttractionsInput, DestinationUncheckedCreateWithoutAttractionsInput>
+    connectOrCreate?: DestinationCreateOrConnectWithoutAttractionsInput
+    connect?: DestinationWhereUniqueInput
+  }
+
+  export type AttractionImageCreateNestedManyWithoutAttractionInput = {
+    create?: XOR<Enumerable<AttractionImageCreateWithoutAttractionInput>, Enumerable<AttractionImageUncheckedCreateWithoutAttractionInput>>
+    connectOrCreate?: Enumerable<AttractionImageCreateOrConnectWithoutAttractionInput>
+    createMany?: AttractionImageCreateManyAttractionInputEnvelope
+    connect?: Enumerable<AttractionImageWhereUniqueInput>
+  }
+
+  export type AttractionImageUncheckedCreateNestedManyWithoutAttractionInput = {
+    create?: XOR<Enumerable<AttractionImageCreateWithoutAttractionInput>, Enumerable<AttractionImageUncheckedCreateWithoutAttractionInput>>
+    connectOrCreate?: Enumerable<AttractionImageCreateOrConnectWithoutAttractionInput>
+    createMany?: AttractionImageCreateManyAttractionInputEnvelope
+    connect?: Enumerable<AttractionImageWhereUniqueInput>
+  }
+
+  export type DestinationUpdateOneRequiredWithoutAttractionsNestedInput = {
+    create?: XOR<DestinationCreateWithoutAttractionsInput, DestinationUncheckedCreateWithoutAttractionsInput>
+    connectOrCreate?: DestinationCreateOrConnectWithoutAttractionsInput
+    upsert?: DestinationUpsertWithoutAttractionsInput
+    connect?: DestinationWhereUniqueInput
+    update?: XOR<DestinationUpdateWithoutAttractionsInput, DestinationUncheckedUpdateWithoutAttractionsInput>
+  }
+
+  export type AttractionImageUpdateManyWithoutAttractionNestedInput = {
+    create?: XOR<Enumerable<AttractionImageCreateWithoutAttractionInput>, Enumerable<AttractionImageUncheckedCreateWithoutAttractionInput>>
+    connectOrCreate?: Enumerable<AttractionImageCreateOrConnectWithoutAttractionInput>
+    upsert?: Enumerable<AttractionImageUpsertWithWhereUniqueWithoutAttractionInput>
+    createMany?: AttractionImageCreateManyAttractionInputEnvelope
+    set?: Enumerable<AttractionImageWhereUniqueInput>
+    disconnect?: Enumerable<AttractionImageWhereUniqueInput>
+    delete?: Enumerable<AttractionImageWhereUniqueInput>
+    connect?: Enumerable<AttractionImageWhereUniqueInput>
+    update?: Enumerable<AttractionImageUpdateWithWhereUniqueWithoutAttractionInput>
+    updateMany?: Enumerable<AttractionImageUpdateManyWithWhereWithoutAttractionInput>
+    deleteMany?: Enumerable<AttractionImageScalarWhereInput>
+  }
+
+  export type AttractionImageUncheckedUpdateManyWithoutAttractionNestedInput = {
+    create?: XOR<Enumerable<AttractionImageCreateWithoutAttractionInput>, Enumerable<AttractionImageUncheckedCreateWithoutAttractionInput>>
+    connectOrCreate?: Enumerable<AttractionImageCreateOrConnectWithoutAttractionInput>
+    upsert?: Enumerable<AttractionImageUpsertWithWhereUniqueWithoutAttractionInput>
+    createMany?: AttractionImageCreateManyAttractionInputEnvelope
+    set?: Enumerable<AttractionImageWhereUniqueInput>
+    disconnect?: Enumerable<AttractionImageWhereUniqueInput>
+    delete?: Enumerable<AttractionImageWhereUniqueInput>
+    connect?: Enumerable<AttractionImageWhereUniqueInput>
+    update?: Enumerable<AttractionImageUpdateWithWhereUniqueWithoutAttractionInput>
+    updateMany?: Enumerable<AttractionImageUpdateManyWithWhereWithoutAttractionInput>
+    deleteMany?: Enumerable<AttractionImageScalarWhereInput>
+  }
+
+  export type DestinationCreateNestedOneWithoutImagesInput = {
+    create?: XOR<DestinationCreateWithoutImagesInput, DestinationUncheckedCreateWithoutImagesInput>
+    connectOrCreate?: DestinationCreateOrConnectWithoutImagesInput
+    connect?: DestinationWhereUniqueInput
+  }
+
+  export type DestinationUpdateOneRequiredWithoutImagesNestedInput = {
+    create?: XOR<DestinationCreateWithoutImagesInput, DestinationUncheckedCreateWithoutImagesInput>
+    connectOrCreate?: DestinationCreateOrConnectWithoutImagesInput
+    upsert?: DestinationUpsertWithoutImagesInput
+    connect?: DestinationWhereUniqueInput
+    update?: XOR<DestinationUpdateWithoutImagesInput, DestinationUncheckedUpdateWithoutImagesInput>
+  }
+
+  export type AttractionCreateNestedOneWithoutImagesInput = {
+    create?: XOR<AttractionCreateWithoutImagesInput, AttractionUncheckedCreateWithoutImagesInput>
+    connectOrCreate?: AttractionCreateOrConnectWithoutImagesInput
+    connect?: AttractionWhereUniqueInput
+  }
+
+  export type AttractionUpdateOneRequiredWithoutImagesNestedInput = {
+    create?: XOR<AttractionCreateWithoutImagesInput, AttractionUncheckedCreateWithoutImagesInput>
+    connectOrCreate?: AttractionCreateOrConnectWithoutImagesInput
+    upsert?: AttractionUpsertWithoutImagesInput
+    connect?: AttractionWhereUniqueInput
+    update?: XOR<AttractionUpdateWithoutImagesInput, AttractionUncheckedUpdateWithoutImagesInput>
   }
 
   export type NestedIntFilter = {
@@ -2116,20 +7455,6 @@ export namespace Prisma {
     startsWith?: string
     endsWith?: string
     not?: NestedStringFilter | string
-  }
-
-  export type NestedStringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | string | null
-    notIn?: Enumerable<string> | string | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableFilter | string | null
   }
 
   export type NestedIntWithAggregatesFilter = {
@@ -2176,32 +7501,500 @@ export namespace Prisma {
     _max?: NestedStringFilter
   }
 
-  export type NestedStringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | string | null
-    notIn?: Enumerable<string> | string | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedStringNullableFilter
-    _max?: NestedStringNullableFilter
+  export type NestedDateTimeFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeFilter | Date | string
   }
 
-  export type NestedIntNullableFilter = {
-    equals?: number | null
-    in?: Enumerable<number> | number | null
-    notIn?: Enumerable<number> | number | null
-    lt?: number
-    lte?: number
-    gt?: number
-    gte?: number
-    not?: NestedIntNullableFilter | number | null
+  export type NestedDateTimeWithAggregatesFilter = {
+    equals?: Date | string
+    in?: Enumerable<Date> | Enumerable<string> | Date | string
+    notIn?: Enumerable<Date> | Enumerable<string> | Date | string
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeWithAggregatesFilter | Date | string
+    _count?: NestedIntFilter
+    _min?: NestedDateTimeFilter
+    _max?: NestedDateTimeFilter
+  }
+
+  export type DestinationCreateWithoutCountryInput = {
+    name: string
+    region: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attractions?: AttractionCreateNestedManyWithoutDestinationInput
+    images?: DestinationImageCreateNestedManyWithoutDestinationInput
+  }
+
+  export type DestinationUncheckedCreateWithoutCountryInput = {
+    id?: number
+    name: string
+    region: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attractions?: AttractionUncheckedCreateNestedManyWithoutDestinationInput
+    images?: DestinationImageUncheckedCreateNestedManyWithoutDestinationInput
+  }
+
+  export type DestinationCreateOrConnectWithoutCountryInput = {
+    where: DestinationWhereUniqueInput
+    create: XOR<DestinationCreateWithoutCountryInput, DestinationUncheckedCreateWithoutCountryInput>
+  }
+
+  export type DestinationCreateManyCountryInputEnvelope = {
+    data: Enumerable<DestinationCreateManyCountryInput>
+    skipDuplicates?: boolean
+  }
+
+  export type DestinationUpsertWithWhereUniqueWithoutCountryInput = {
+    where: DestinationWhereUniqueInput
+    update: XOR<DestinationUpdateWithoutCountryInput, DestinationUncheckedUpdateWithoutCountryInput>
+    create: XOR<DestinationCreateWithoutCountryInput, DestinationUncheckedCreateWithoutCountryInput>
+  }
+
+  export type DestinationUpdateWithWhereUniqueWithoutCountryInput = {
+    where: DestinationWhereUniqueInput
+    data: XOR<DestinationUpdateWithoutCountryInput, DestinationUncheckedUpdateWithoutCountryInput>
+  }
+
+  export type DestinationUpdateManyWithWhereWithoutCountryInput = {
+    where: DestinationScalarWhereInput
+    data: XOR<DestinationUpdateManyMutationInput, DestinationUncheckedUpdateManyWithoutDestinationsInput>
+  }
+
+  export type DestinationScalarWhereInput = {
+    AND?: Enumerable<DestinationScalarWhereInput>
+    OR?: Enumerable<DestinationScalarWhereInput>
+    NOT?: Enumerable<DestinationScalarWhereInput>
+    id?: IntFilter | number
+    name?: StringFilter | string
+    region?: StringFilter | string
+    countryId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+  }
+
+  export type AttractionCreateWithoutDestinationInput = {
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    images?: AttractionImageCreateNestedManyWithoutAttractionInput
+  }
+
+  export type AttractionUncheckedCreateWithoutDestinationInput = {
+    id?: number
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    images?: AttractionImageUncheckedCreateNestedManyWithoutAttractionInput
+  }
+
+  export type AttractionCreateOrConnectWithoutDestinationInput = {
+    where: AttractionWhereUniqueInput
+    create: XOR<AttractionCreateWithoutDestinationInput, AttractionUncheckedCreateWithoutDestinationInput>
+  }
+
+  export type AttractionCreateManyDestinationInputEnvelope = {
+    data: Enumerable<AttractionCreateManyDestinationInput>
+    skipDuplicates?: boolean
+  }
+
+  export type CountryCreateWithoutDestinationsInput = {
+    code: string
+    name: string
+  }
+
+  export type CountryUncheckedCreateWithoutDestinationsInput = {
+    id?: number
+    code: string
+    name: string
+  }
+
+  export type CountryCreateOrConnectWithoutDestinationsInput = {
+    where: CountryWhereUniqueInput
+    create: XOR<CountryCreateWithoutDestinationsInput, CountryUncheckedCreateWithoutDestinationsInput>
+  }
+
+  export type DestinationImageCreateWithoutDestinationInput = {
+    id?: string
+    url: string
+  }
+
+  export type DestinationImageUncheckedCreateWithoutDestinationInput = {
+    id?: string
+    url: string
+  }
+
+  export type DestinationImageCreateOrConnectWithoutDestinationInput = {
+    where: DestinationImageWhereUniqueInput
+    create: XOR<DestinationImageCreateWithoutDestinationInput, DestinationImageUncheckedCreateWithoutDestinationInput>
+  }
+
+  export type DestinationImageCreateManyDestinationInputEnvelope = {
+    data: Enumerable<DestinationImageCreateManyDestinationInput>
+    skipDuplicates?: boolean
+  }
+
+  export type AttractionUpsertWithWhereUniqueWithoutDestinationInput = {
+    where: AttractionWhereUniqueInput
+    update: XOR<AttractionUpdateWithoutDestinationInput, AttractionUncheckedUpdateWithoutDestinationInput>
+    create: XOR<AttractionCreateWithoutDestinationInput, AttractionUncheckedCreateWithoutDestinationInput>
+  }
+
+  export type AttractionUpdateWithWhereUniqueWithoutDestinationInput = {
+    where: AttractionWhereUniqueInput
+    data: XOR<AttractionUpdateWithoutDestinationInput, AttractionUncheckedUpdateWithoutDestinationInput>
+  }
+
+  export type AttractionUpdateManyWithWhereWithoutDestinationInput = {
+    where: AttractionScalarWhereInput
+    data: XOR<AttractionUpdateManyMutationInput, AttractionUncheckedUpdateManyWithoutAttractionsInput>
+  }
+
+  export type AttractionScalarWhereInput = {
+    AND?: Enumerable<AttractionScalarWhereInput>
+    OR?: Enumerable<AttractionScalarWhereInput>
+    NOT?: Enumerable<AttractionScalarWhereInput>
+    id?: IntFilter | number
+    name?: StringFilter | string
+    destinationId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+  }
+
+  export type CountryUpsertWithoutDestinationsInput = {
+    update: XOR<CountryUpdateWithoutDestinationsInput, CountryUncheckedUpdateWithoutDestinationsInput>
+    create: XOR<CountryCreateWithoutDestinationsInput, CountryUncheckedCreateWithoutDestinationsInput>
+  }
+
+  export type CountryUpdateWithoutDestinationsInput = {
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CountryUncheckedUpdateWithoutDestinationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DestinationImageUpsertWithWhereUniqueWithoutDestinationInput = {
+    where: DestinationImageWhereUniqueInput
+    update: XOR<DestinationImageUpdateWithoutDestinationInput, DestinationImageUncheckedUpdateWithoutDestinationInput>
+    create: XOR<DestinationImageCreateWithoutDestinationInput, DestinationImageUncheckedCreateWithoutDestinationInput>
+  }
+
+  export type DestinationImageUpdateWithWhereUniqueWithoutDestinationInput = {
+    where: DestinationImageWhereUniqueInput
+    data: XOR<DestinationImageUpdateWithoutDestinationInput, DestinationImageUncheckedUpdateWithoutDestinationInput>
+  }
+
+  export type DestinationImageUpdateManyWithWhereWithoutDestinationInput = {
+    where: DestinationImageScalarWhereInput
+    data: XOR<DestinationImageUpdateManyMutationInput, DestinationImageUncheckedUpdateManyWithoutImagesInput>
+  }
+
+  export type DestinationImageScalarWhereInput = {
+    AND?: Enumerable<DestinationImageScalarWhereInput>
+    OR?: Enumerable<DestinationImageScalarWhereInput>
+    NOT?: Enumerable<DestinationImageScalarWhereInput>
+    id?: StringFilter | string
+    url?: StringFilter | string
+    destinationId?: IntFilter | number
+  }
+
+  export type DestinationCreateWithoutAttractionsInput = {
+    name: string
+    region: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    country: CountryCreateNestedOneWithoutDestinationsInput
+    images?: DestinationImageCreateNestedManyWithoutDestinationInput
+  }
+
+  export type DestinationUncheckedCreateWithoutAttractionsInput = {
+    id?: number
+    name: string
+    region: string
+    countryId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    images?: DestinationImageUncheckedCreateNestedManyWithoutDestinationInput
+  }
+
+  export type DestinationCreateOrConnectWithoutAttractionsInput = {
+    where: DestinationWhereUniqueInput
+    create: XOR<DestinationCreateWithoutAttractionsInput, DestinationUncheckedCreateWithoutAttractionsInput>
+  }
+
+  export type AttractionImageCreateWithoutAttractionInput = {
+    id?: string
+    url: string
+  }
+
+  export type AttractionImageUncheckedCreateWithoutAttractionInput = {
+    id?: string
+    url: string
+  }
+
+  export type AttractionImageCreateOrConnectWithoutAttractionInput = {
+    where: AttractionImageWhereUniqueInput
+    create: XOR<AttractionImageCreateWithoutAttractionInput, AttractionImageUncheckedCreateWithoutAttractionInput>
+  }
+
+  export type AttractionImageCreateManyAttractionInputEnvelope = {
+    data: Enumerable<AttractionImageCreateManyAttractionInput>
+    skipDuplicates?: boolean
+  }
+
+  export type DestinationUpsertWithoutAttractionsInput = {
+    update: XOR<DestinationUpdateWithoutAttractionsInput, DestinationUncheckedUpdateWithoutAttractionsInput>
+    create: XOR<DestinationCreateWithoutAttractionsInput, DestinationUncheckedCreateWithoutAttractionsInput>
+  }
+
+  export type DestinationUpdateWithoutAttractionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    region?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    country?: CountryUpdateOneRequiredWithoutDestinationsNestedInput
+    images?: DestinationImageUpdateManyWithoutDestinationNestedInput
+  }
+
+  export type DestinationUncheckedUpdateWithoutAttractionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    region?: StringFieldUpdateOperationsInput | string
+    countryId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    images?: DestinationImageUncheckedUpdateManyWithoutDestinationNestedInput
+  }
+
+  export type AttractionImageUpsertWithWhereUniqueWithoutAttractionInput = {
+    where: AttractionImageWhereUniqueInput
+    update: XOR<AttractionImageUpdateWithoutAttractionInput, AttractionImageUncheckedUpdateWithoutAttractionInput>
+    create: XOR<AttractionImageCreateWithoutAttractionInput, AttractionImageUncheckedCreateWithoutAttractionInput>
+  }
+
+  export type AttractionImageUpdateWithWhereUniqueWithoutAttractionInput = {
+    where: AttractionImageWhereUniqueInput
+    data: XOR<AttractionImageUpdateWithoutAttractionInput, AttractionImageUncheckedUpdateWithoutAttractionInput>
+  }
+
+  export type AttractionImageUpdateManyWithWhereWithoutAttractionInput = {
+    where: AttractionImageScalarWhereInput
+    data: XOR<AttractionImageUpdateManyMutationInput, AttractionImageUncheckedUpdateManyWithoutImagesInput>
+  }
+
+  export type AttractionImageScalarWhereInput = {
+    AND?: Enumerable<AttractionImageScalarWhereInput>
+    OR?: Enumerable<AttractionImageScalarWhereInput>
+    NOT?: Enumerable<AttractionImageScalarWhereInput>
+    id?: StringFilter | string
+    url?: StringFilter | string
+    attractionId?: IntFilter | number
+  }
+
+  export type DestinationCreateWithoutImagesInput = {
+    name: string
+    region: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attractions?: AttractionCreateNestedManyWithoutDestinationInput
+    country: CountryCreateNestedOneWithoutDestinationsInput
+  }
+
+  export type DestinationUncheckedCreateWithoutImagesInput = {
+    id?: number
+    name: string
+    region: string
+    countryId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attractions?: AttractionUncheckedCreateNestedManyWithoutDestinationInput
+  }
+
+  export type DestinationCreateOrConnectWithoutImagesInput = {
+    where: DestinationWhereUniqueInput
+    create: XOR<DestinationCreateWithoutImagesInput, DestinationUncheckedCreateWithoutImagesInput>
+  }
+
+  export type DestinationUpsertWithoutImagesInput = {
+    update: XOR<DestinationUpdateWithoutImagesInput, DestinationUncheckedUpdateWithoutImagesInput>
+    create: XOR<DestinationCreateWithoutImagesInput, DestinationUncheckedCreateWithoutImagesInput>
+  }
+
+  export type DestinationUpdateWithoutImagesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    region?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attractions?: AttractionUpdateManyWithoutDestinationNestedInput
+    country?: CountryUpdateOneRequiredWithoutDestinationsNestedInput
+  }
+
+  export type DestinationUncheckedUpdateWithoutImagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    region?: StringFieldUpdateOperationsInput | string
+    countryId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attractions?: AttractionUncheckedUpdateManyWithoutDestinationNestedInput
+  }
+
+  export type AttractionCreateWithoutImagesInput = {
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    destination: DestinationCreateNestedOneWithoutAttractionsInput
+  }
+
+  export type AttractionUncheckedCreateWithoutImagesInput = {
+    id?: number
+    name: string
+    destinationId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttractionCreateOrConnectWithoutImagesInput = {
+    where: AttractionWhereUniqueInput
+    create: XOR<AttractionCreateWithoutImagesInput, AttractionUncheckedCreateWithoutImagesInput>
+  }
+
+  export type AttractionUpsertWithoutImagesInput = {
+    update: XOR<AttractionUpdateWithoutImagesInput, AttractionUncheckedUpdateWithoutImagesInput>
+    create: XOR<AttractionCreateWithoutImagesInput, AttractionUncheckedCreateWithoutImagesInput>
+  }
+
+  export type AttractionUpdateWithoutImagesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    destination?: DestinationUpdateOneRequiredWithoutAttractionsNestedInput
+  }
+
+  export type AttractionUncheckedUpdateWithoutImagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    destinationId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DestinationCreateManyCountryInput = {
+    id?: number
+    name: string
+    region: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DestinationUpdateWithoutCountryInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    region?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attractions?: AttractionUpdateManyWithoutDestinationNestedInput
+    images?: DestinationImageUpdateManyWithoutDestinationNestedInput
+  }
+
+  export type DestinationUncheckedUpdateWithoutCountryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    region?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attractions?: AttractionUncheckedUpdateManyWithoutDestinationNestedInput
+    images?: DestinationImageUncheckedUpdateManyWithoutDestinationNestedInput
+  }
+
+  export type DestinationUncheckedUpdateManyWithoutDestinationsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    region?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttractionCreateManyDestinationInput = {
+    id?: number
+    name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DestinationImageCreateManyDestinationInput = {
+    id?: string
+    url: string
+  }
+
+  export type AttractionUpdateWithoutDestinationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    images?: AttractionImageUpdateManyWithoutAttractionNestedInput
+  }
+
+  export type AttractionUncheckedUpdateWithoutDestinationInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    images?: AttractionImageUncheckedUpdateManyWithoutAttractionNestedInput
+  }
+
+  export type AttractionUncheckedUpdateManyWithoutAttractionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DestinationImageUpdateWithoutDestinationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DestinationImageUncheckedUpdateWithoutDestinationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DestinationImageUncheckedUpdateManyWithoutImagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttractionImageCreateManyAttractionInput = {
+    id?: string
+    url: string
+  }
+
+  export type AttractionImageUpdateWithoutAttractionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttractionImageUncheckedUpdateWithoutAttractionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type AttractionImageUncheckedUpdateManyWithoutImagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
   }
 
 

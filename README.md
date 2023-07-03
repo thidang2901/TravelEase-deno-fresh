@@ -57,9 +57,9 @@ next-gen web framework.
 Check Deno with `deno --version`:
 
 ```
-deno 1.34.3 (release, x86_64-unknown-linux-gnu)
+deno 1.34.1 (release, x86_64-unknown-linux-gnu)
 v8 11.5.150.2
-typescript 5.0.
+typescript 5.0.4
 ```
 
 ### Setup Prisma Client
@@ -115,24 +115,14 @@ deno run -A prisma/seed.ts
 
 #### **Issues**
 
-If your `deno run -A --unstable npm:prisma` did not work well, it was unstable
-sometimes, hanging up forever,... like this:
+If your `deno run -A --unstable npm:prisma generate --data-proxy` did not work
+well, you might run into this issue
+[#19590](https://github.com/denoland/deno/issues/19590)
 
 <img src="./data/images/deno-prisma-issue.png" width="auto" height="120" alt="deno-prisma-issue">
 
-To deal with it, use `npx prisma` instead without `deno`, for examples:
-
-```
-npx prisma generate --data-proxy
-npx prisma db pull
-npx prisma db push
-```
-
-Result:
-
-<img src="./data/images/deno-prisma-success.png" width="690" height="auto" alt="deno-prisma-success">
-
-<br/>
+Just downgrade your deno version 1.34.1 with `deno upgrade --version 1.34.1` to
+resolve it.
 
 <p align="center" style="font-size:20px">
   HAPPY CODDING!

@@ -14,7 +14,7 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 export type CountryPayload<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
   objects: {
-    Destinations: DestinationPayload<ExtArgs>[]
+    destinations: DestinationPayload<ExtArgs>[]
   }
   scalars: $Extensions.GetResult<{
     id: number
@@ -1368,11 +1368,11 @@ export namespace Prisma {
 
 
   export type CountryCountOutputType = {
-    Destinations: number
+    destinations: number
   }
 
   export type CountryCountOutputTypeSelect<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    Destinations?: boolean | CountryCountOutputTypeCountDestinationsArgs
+    destinations?: boolean | CountryCountOutputTypeCountDestinationsArgs
   }
 
   // Custom InputTypes
@@ -1665,7 +1665,7 @@ export namespace Prisma {
     id?: boolean
     code?: boolean
     name?: boolean
-    Destinations?: boolean | Country$DestinationsArgs<ExtArgs>
+    destinations?: boolean | Country$destinationsArgs<ExtArgs>
     _count?: boolean | CountryCountOutputTypeArgs<ExtArgs>
   }, ExtArgs["result"]["country"]>
 
@@ -1676,7 +1676,7 @@ export namespace Prisma {
   }
 
   export type CountryInclude<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
-    Destinations?: boolean | Country$DestinationsArgs<ExtArgs>
+    destinations?: boolean | Country$destinationsArgs<ExtArgs>
     _count?: boolean | CountryCountOutputTypeArgs<ExtArgs>
   }
 
@@ -2050,7 +2050,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    Destinations<T extends Country$DestinationsArgs<ExtArgs> = {}>(args?: Subset<T, Country$DestinationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findMany', never>| Null>;
+    destinations<T extends Country$destinationsArgs<ExtArgs> = {}>(args?: Subset<T, Country$destinationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Types.GetResult<DestinationPayload<ExtArgs>, T, 'findMany', never>| Null>;
 
     private get _document();
     /**
@@ -2408,9 +2408,9 @@ export namespace Prisma {
 
 
   /**
-   * Country.Destinations
+   * Country.destinations
    */
-  export type Country$DestinationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
+  export type Country$destinationsArgs<ExtArgs extends $Extensions.Args = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Destination
      */
@@ -6428,14 +6428,14 @@ export namespace Prisma {
     id?: IntFilter | number
     code?: StringFilter | string
     name?: StringFilter | string
-    Destinations?: DestinationListRelationFilter
+    destinations?: DestinationListRelationFilter
   }
 
   export type CountryOrderByWithRelationInput = {
     id?: SortOrder
     code?: SortOrder
     name?: SortOrder
-    Destinations?: DestinationOrderByRelationAggregateInput
+    destinations?: DestinationOrderByRelationAggregateInput
   }
 
   export type CountryWhereUniqueInput = {
@@ -6658,27 +6658,27 @@ export namespace Prisma {
   export type CountryCreateInput = {
     code: string
     name: string
-    Destinations?: DestinationCreateNestedManyWithoutCountryInput
+    destinations?: DestinationCreateNestedManyWithoutCountryInput
   }
 
   export type CountryUncheckedCreateInput = {
     id?: number
     code: string
     name: string
-    Destinations?: DestinationUncheckedCreateNestedManyWithoutCountryInput
+    destinations?: DestinationUncheckedCreateNestedManyWithoutCountryInput
   }
 
   export type CountryUpdateInput = {
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    Destinations?: DestinationUpdateManyWithoutCountryNestedInput
+    destinations?: DestinationUpdateManyWithoutCountryNestedInput
   }
 
   export type CountryUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    Destinations?: DestinationUncheckedUpdateManyWithoutCountryNestedInput
+    destinations?: DestinationUncheckedUpdateManyWithoutCountryNestedInput
   }
 
   export type CountryCreateManyInput = {

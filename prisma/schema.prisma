@@ -13,7 +13,7 @@ model Country {
   id           Int           @id @default(autoincrement())
   code         String        @unique
   name         String
-  Destinations Destination[]
+  destinations Destination[]
 }
 
 model Destination {
