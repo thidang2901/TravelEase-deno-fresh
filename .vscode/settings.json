@@ -3,6 +3,12 @@
   "deno.lint": true,
   "editor.defaultFormatter": "denoland.vscode-deno",
   "cSpell.words": [
-    "Deno"
-  ]
+    "Deno",
+    "geologica",
+    "preact",
+    "twind"
+  ],
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
 }

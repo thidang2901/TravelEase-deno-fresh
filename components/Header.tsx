@@ -8,11 +8,11 @@ type Props = {
 
 export function Header({ active }: Props) {
   return (
-    <header className="flex justify-center w-full h-24">
+    <header className="fixed top-0 z-50 flex justify-center w-full h-24 bg-gray-50">
       <div className="flex items-center justify-between w-full px-10">
         {/* Logo */}
         <a className="w-36" href="#">
-          <img src="/logo.svg" />
+          <img src="logo.svg" />
         </a>
 
         {/* Menu */}

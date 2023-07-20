@@ -21,6 +21,8 @@
     "$std/": "https://deno.land/std@0.190.0/",
     "react-icons/fa": "https://cdn.jsdelivr.net/gh/urielch/react-icons-fa@1.0.9/mod.ts",
     "react-icons/fa/": "https://cdn.jsdelivr.net/gh/urielch/react-icons-fa@1.0.9/ico/",
+    "react-icons/md": "https://cdn.jsdelivr.net/gh/urielch/react-icons-md@1.0.9/mod.ts",
+    "react-icons/md/": "https://cdn.jsdelivr.net/gh/urielch/react-icons-md@1.0.9/ico/",
     "@/": "./",
     "./": "./"
   },
