@@ -6,6 +6,7 @@ import { HeadElement } from "@/components/HeadElement.tsx";
 import DestinationCard from "@/islands/DestinationCard.tsx";
 import SearchInput from "@/islands/SearchInput.tsx";
 import { Destination } from "@/libs/schemas/destination.schema.ts";
+import { Carousel } from "../components/Carousel.tsx";
 
 export const handler: Handlers<Destination[]> = {
   // async GET(_req, ctx) {
@@ -57,7 +58,9 @@ export default function Home(ctx: PageProps<Destination[]>) {
           autoComplete="off"
         />
 
-        <div className="flex flex-row w-full h-full items-center justify-center gap-10">
+        <Carousel items={destinations} />
+
+        {/* <div className="flex flex-row w-full h-full items-center justify-center gap-10">
           <MdArrowBackIos size={30} className="cursor-pointer text-red-500" />
           <div className="flex items-center justify-center border-2 border-green-500 gap-10">
             {destinations.map((item) => (
@@ -71,7 +74,7 @@ export default function Home(ctx: PageProps<Destination[]>) {
             size={30}
             className="cursor-pointer text-red-500"
           />
-        </div>
+        </div> */}
       </Container>
     </>
   );
